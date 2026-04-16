@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /admin.html
+Disallow: /login.html
+
+Sitemap: https://toolsathi4698.builtwithrocket.new/sitemap.xml
