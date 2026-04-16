@@ -260,42 +260,43 @@
     <!-- AIToolsPreview -->
     <section class="section-gap relative z-10" style="padding: 6rem 0; background: linear-gradient(180deg, transparent, rgba(124,58,237,0.04), transparent);">
       <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; align-items: center;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; align-items: center;">
           <!-- Left: Text -->
           <div class="reveal-hidden">
-            <div class="badge badge-green inline-flex mb-6" style="display: inline-flex; margin-bottom: 1.5rem;">
+            <div class="badge badge-green" style="display: inline-flex; margin-bottom: 1.5rem;">
               <span style="margin-right: 0.375rem;">🤖</span> AI-Powered
             </div>
-            <h2 class="font-display font-semibold mb-6 leading-tight" style="font-size: clamp(1.875rem, 5vw, 3rem); color: var(--text-primary);">
+            <h2 class="font-display font-semibold leading-tight" style="font-size: clamp(1.875rem, 5vw, 3rem); color: var(--text-primary); margin: 0 0 1.5rem 0;">
               Smart Prompt <span class="gradient-text-gold italic">Generators</span>
             </h2>
-            <p class="text-base sm:text-lg font-light leading-relaxed mb-8" style="color: var(--text-secondary);">
+            <p class="font-light leading-relaxed" style="font-size: clamp(1rem, 2vw, 1.125rem); color: var(--text-secondary); margin: 0 0 2rem 0;">
               Two AI-powered tools built for students. Generate optimized YouTube video titles and professional resume summaries — just enter your topic and copy the result.
             </p>
 
             <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
-              <div class="glass-card rounded-xl p-4 flex items-start gap-4" style="display: flex; gap: 1rem; padding: 1.25rem;">
-                <span class="text-2xl mt-0.5" style="margin-top: 0.125rem;">▶️</span>
+              <div class="glass-card" style="border-radius: 0.75rem; padding: 1rem; display: flex; align-items: flex-start; gap: 1rem;">
+                <span style="font-size: 1.5rem; margin-top: 0.125rem;">▶️</span>
                 <div>
-                  <div class="font-semibold text-sm mb-1" style="color: var(--text-primary);">YouTube Title Generator</div>
-                  <div class="text-sm font-light" style="color: var(--text-secondary);">Generate 5 click-worthy titles for any video topic with SEO keywords.</div>
+                  <div style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.25rem;">YouTube Title Generator</div>
+                  <div style="font-size: 0.875rem; font-weight: 300; color: var(--text-secondary);">Generate 5 click-worthy titles for any video topic with SEO keywords.</div>
                 </div>
               </div>
-              <div class="glass-card rounded-xl p-4 flex items-start gap-4" style="display: flex; gap: 1rem; padding: 1.25rem;">
-                <span class="text-2xl mt-0.5" style="margin-top: 0.125rem;">📄</span>
+              <div class="glass-card" style="border-radius: 0.75rem; padding: 1rem; display: flex; align-items: flex-start; gap: 1rem;">
+                <span style="font-size: 1.5rem; margin-top: 0.125rem;">📄</span>
                 <div>
-                  <div class="font-semibold text-sm mb-1" style="color: var(--text-primary);">Resume Summary Generator</div>
-                  <div class="text-sm font-light" style="color: var(--text-secondary);">Turn your skills and experience into a professional resume summary.</div>
+                  <div style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); margin-bottom: 0.25rem;">Resume Summary Generator</div>
+                  <div style="font-size: 0.875rem; font-weight: 300; color: var(--text-secondary);">Turn your skills and experience into a professional resume summary.</div>
                 </div>
               </div>
             </div>
 
-            <a href="ai-tools.html" class="btn-primary inline-block" style="display: inline-block;">Try AI Tools Free →</a>
+            <a href="ai-tools.html" class="btn-primary" style="display: inline-block;">Try AI Tools Free →</a>
           </div>
 
           <!-- Right: Mock UI card -->
           <div class="reveal-hidden delay-2">
-            <div class="glass-card rounded-2xl p-6 relative overflow-hidden" style="padding: 2rem; border-radius: 1rem; background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(16,185,129,0.04)); border: 1px solid rgba(124,58,237,0.2);">
+            <div class="glass-card relative overflow-hidden" style="border-radius: 1rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(16,185,129,0.04)); border: 1px solid rgba(124,58,237,0.2);">
+              <!-- Header -->
               <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
                 <div style="width: 2rem; height: 2rem; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-size: 1.125rem; background: rgba(124,58,237,0.15);">▶️</div>
                 <div>
@@ -304,6 +305,7 @@
                 </div>
               </div>
 
+              <!-- Mock input -->
               <div style="margin-bottom: 1rem;">
                 <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.025em; margin-bottom: 0.5rem; color: var(--text-muted);">Video Topic</div>
                 <div style="border-radius: 0.75rem; padding: 0.75rem 1rem; font-size: 0.875rem; background: rgba(255,255,255,0.05); border: 1px solid var(--border-subtle); color: var(--text-secondary);">
@@ -311,19 +313,20 @@
                 </div>
               </div>
 
+              <!-- Mock results -->
               <div style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.025em; margin-bottom: 0.75rem; color: var(--text-muted);">Generated Titles</div>
               
-              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);">
-                <span class="text-xs leading-relaxed flex-1" style="color: var(--text-secondary);">Python Tutorial for Beginners 2026 | Learn Python in 1 Hour</span>
-                <span class="text-xs font-semibold shrink-0 px-2 py-1 rounded" style="background: rgba(16,185,129,0.1); color: #34D399; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">Copy</span>
+              <div class="group" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);">
+                <span style="font-size: 0.75rem; line-height: 1.6; flex: 1; color: var(--text-secondary);">Python Tutorial for Beginners 2026 | Learn Python in 1 Hour</span>
+                <span style="font-size: 0.75rem; font-weight: 600; flex-shrink: 0; padding: 0.25rem 0.5rem; border-radius: 0.25rem; background: rgba(16,185,129,0.1); color: #34D399;">Copy</span>
               </div>
-              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);">
-                <span class="text-xs leading-relaxed flex-1" style="color: var(--text-secondary);">Python Full Course for Absolute Beginners — Free & Easy</span>
-                <span class="text-xs font-semibold shrink-0 px-2 py-1 rounded" style="background: rgba(16,185,129,0.1); color: #34D399; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">Copy</span>
+              <div class="group" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);">
+                <span style="font-size: 0.75rem; line-height: 1.6; flex: 1; color: var(--text-secondary);">Python Full Course for Absolute Beginners — Free & Easy</span>
+                <span style="font-size: 0.75rem; font-weight: 600; flex-shrink: 0; padding: 0.25rem 0.5rem; border-radius: 0.25rem; background: rgba(16,185,129,0.1); color: #34D399;">Copy</span>
               </div>
-              <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);">
-                <span class="text-xs leading-relaxed flex-1" style="color: var(--text-secondary);">🐍 Learn Python Programming: Complete Beginner's Guide</span>
-                <span class="text-xs font-semibold shrink-0 px-2 py-1 rounded" style="background: rgba(16,185,129,0.1); color: #34D399; padding: 0.25rem 0.5rem; border-radius: 0.25rem;">Copy</span>
+              <div class="group" style="display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);">
+                <span style="font-size: 0.75rem; line-height: 1.6; flex: 1; color: var(--text-secondary);">🐍 Learn Python Programming: Complete Beginner's Guide</span>
+                <span style="font-size: 0.75rem; font-weight: 600; flex-shrink: 0; padding: 0.25rem 0.5rem; border-radius: 0.25rem; background: rgba(16,185,129,0.1); color: #34D399;">Copy</span>
               </div>
 
               <!-- Decorative glow -->
