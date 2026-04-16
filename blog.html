@@ -91,7 +91,10 @@
         </p>
       </div>
 
-      <!-- Articles -->
+      <!-- Admin-published posts (injected dynamically from localStorage) -->
+      <div id="admin-posts"></div>
+
+      <!-- Static Articles -->
       <div style="display: flex; flex-direction: column; gap: 2.5rem; margin-bottom: 4rem;">
         
         <!-- Article 1 -->
@@ -365,6 +368,88 @@
   </footer>
 
   <script src="js/script.js"></script>
+  <script>
+  // ── Inject admin-published blog posts from localStorage ────────────────
+  (function() {
+    var CATEGORY_COLORS = {
+      'Student Tips': { badge: 'badge-violet', emoji: '🎓' },
+      'Tech & AI':    { badge: 'badge-green',  emoji: '🤖' },
+      'Career':       { badge: 'badge-violet', emoji: '💼' },
+      'Finance':      { badge: 'badge-gold',   emoji: '💰' },
+      'Study Hacks':  { badge: 'badge-green',  emoji: '📚' },
+      'Tutorial':     { badge: 'badge-violet', emoji: '🛠️' },
+      'Other':        { badge: 'badge-violet', emoji: '📝' },
+    };
+
+    function esc(s) {
+      return String(s)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;');
+    }
+
+    var raw = localStorage.getItem('ts-posts');
+    if (!raw) return;
+    var posts;
+    try { posts = JSON.parse(raw); } catch(e) { return; }
+
+    // Only published posts
+    var published = posts.filter(function(p) { return p.status === 'published'; });
+    if (!published.length) return;
+
+    var container = document.getElementById('admin-posts');
+    if (!container) return;
+
+    var html = '<div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.875rem;">' +
+      '<div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>' +
+      '<span style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap;">✨ Latest Posts</span>' +
+      '<div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>' +
+    '</div>';
+
+    html += '<div style="display: flex; flex-direction: column; gap: 2.5rem; margin-bottom: 2.5rem;">';
+
+    published.forEach(function(p) {
+      var cat  = CATEGORY_COLORS[p.category] || CATEGORY_COLORS['Other'];
+      var body = p.body || p.content || '';
+      // Convert newlines to paragraphs
+      var paragraphs = body.split(/\n\n+/).filter(function(s){ return s.trim(); });
+      var bodyHtml = paragraphs.map(function(para) {
+        return '<p style="font-size: 0.875rem; line-height: 1.625; color: var(--text-secondary); margin-bottom: 1.1rem;">' + esc(para.trim()) + '</p>';
+      }).join('');
+
+      html += '<article class="glass-card" style="border-radius: 1rem; padding: 2.5rem; position: relative;">';
+      // NEW badge
+      html += '<span style="position: absolute; top: 1.25rem; right: 1.25rem; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; padding: 0.2rem 0.55rem; border-radius: 99px; background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); color: #A78BFA;">NEW</span>';
+      // Meta row
+      html += '<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem;">';
+      html += '<span class="badge ' + cat.badge + '">' + cat.emoji + ' ' + esc(p.category) + '</span>';
+      html += '<span style="font-size: 0.75rem; color: var(--text-muted);">📅 ' + esc(p.date || '') + '</span>';
+      html += '<span style="font-size: 0.75rem; color: var(--text-muted);">· ' + esc(p.readTime || '1 min read') + '</span>';
+      html += '</div>';
+      // Title
+      html += '<h2 class="font-display font-semibold" style="font-size: clamp(1.375rem, 3vw, 1.875rem); color: var(--text-primary); margin-bottom: 0.875rem; line-height: 1.3;">' + esc(p.title) + '</h2>';
+      // Summary
+      html += '<p style="font-size: 0.9375rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 1.5rem; font-weight: 300;">' + esc(p.summary || '') + '</p>';
+      // Divider
+      html += '<div style="height: 1px; background: var(--border-subtle); margin-bottom: 1.5rem;"></div>';
+      // Body content
+      html += '<div>' + bodyHtml + '</div>';
+      html += '</article>';
+    });
+
+    html += '</div>';
+
+    // Separator before static articles
+    html += '<div style="margin-bottom: 1rem; display: flex; align-items: center; gap: 0.875rem;">' +
+      '<div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>' +
+      '<span style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); white-space: nowrap;">📌 Featured Articles</span>' +
+      '<div style="flex: 1; height: 1px; background: var(--border-subtle);"></div>' +
+    '</div>';
+
+    container.innerHTML = html;
+  })();
+  </script>
 
   <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Ftoolsathi4698back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.18"></script>
   <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
