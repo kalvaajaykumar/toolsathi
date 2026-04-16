@@ -1,833 +1,1107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard — Toolsathi</title>
   <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script>
+    // Auth guard — instant redirect
     if (localStorage.getItem('toolsathi-admin') !== 'true') {
       window.location.replace('login.html');
     }
+    // Apply saved theme immediately to avoid flash
+    const _t = localStorage.getItem('toolsathi-theme');
+    if (_t === 'light') document.documentElement.setAttribute('data-theme','light');
   </script>
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; overflow-x: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080B14; --bg2: #0D1120; --bg3: #111827;
+      --card: rgba(255,255,255,0.04); --card-hover: rgba(255,255,255,0.07);
+      --border: rgba(255,255,255,0.08); --border-strong: rgba(255,255,255,0.14);
+      --t1: #F1F5F9; --t2: #CBD5E1; --t3: #64748B;
+      --violet: #7C3AED; --violet-light: #A78BFA; --violet-glow: rgba(124,58,237,0.2);
+      --gold: #F59E0B; --gold-light: #FCD34D;
+      --green: #10B981; --green-light: #34D399;
+      --red: #EF4444; --red-light: #F87171;
+      --blue: #3B82F6;
+      --sidebar-w: 220px;
+    }
+    [data-theme="light"] {
+      --bg: #F8FAFC; --bg2: #F1F5F9; --bg3: #E2E8F0;
+      --card: rgba(0,0,0,0.03); --card-hover: rgba(0,0,0,0.06);
+      --border: rgba(0,0,0,0.08); --border-strong: rgba(0,0,0,0.16);
+      --t1: #0F172A; --t2: #334155; --t3: #94A3B8;
+      --violet-glow: rgba(124,58,237,0.12);
+    }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--bg);
+      color: var(--t1);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.3s, color 0.3s;
+    }
 
-    /* Layout */
-    .admin-wrapper { min-height: 100vh; display: flex; background: var(--bg-primary); }
-    .sidebar { position: sticky; top: 0; height: 100vh; width: 15rem; display: flex; flex-direction: column; background: var(--bg-secondary); border-right: 1px solid var(--border-subtle); flex-shrink: 0; overflow-y: auto; }
-    .admin-content { flex: 1; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
+    /* ── Layout ── */
+    .shell { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      position: sticky; top: 0; height: 100vh;
+      display: flex; flex-direction: column;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+    }
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .topbar {
+      position: sticky; top: 0; z-index: 40;
+      height: 56px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+    }
+    .content { flex: 1; padding: 1.75rem; overflow-y: auto; }
 
-    /* Sections */
-    .admin-section { display: none; padding: 1.5rem; animation: fadeIn 0.25s ease; }
-    .admin-section.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    /* ── Sidebar ── */
+    .brand {
+      padding: 1.1rem 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0.625rem;
+    }
+    .brand-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--violet), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Fraunces', serif; font-weight: 700; font-size: 1rem; color: #fff;
+      flex-shrink: 0;
+    }
+    .brand-text p:first-child { font-family: 'Fraunces', serif; font-weight: 700; font-size: 0.9rem; color: var(--t1); line-height: 1.2; }
+    .brand-text p:last-child  { font-size: 0.68rem; color: var(--t3); }
 
-    /* Nav buttons */
-    .nav-btn { width: 100%; display: flex; align-items: center; gap: 0.75rem; padding: 0.7rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; font-family: inherit; transition: all 0.2s; border: none; cursor: pointer; text-align: left; background: transparent; color: var(--text-secondary); }
-    .nav-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
-    .nav-btn.active { background: rgba(124,58,237,0.15); color: #A78BFA !important; }
+    .nav { flex: 1; padding: 0.75rem 0.625rem; display: flex; flex-direction: column; gap: 2px; }
+    .nav-section-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--t3); padding: 0.875rem 0.75rem 0.375rem; }
+    .nav-item {
+      display: flex; align-items: center; gap: 0.625rem;
+      padding: 0.625rem 0.75rem; border-radius: 0.625rem;
+      font-size: 0.8rem; font-weight: 500; font-family: inherit;
+      color: var(--t2); background: none; border: none; cursor: pointer;
+      text-align: left; text-decoration: none;
+      transition: all 0.15s; width: 100%;
+    }
+    .nav-item:hover { background: var(--card); color: var(--t1); }
+    .nav-item.active { background: var(--violet-glow); color: var(--violet-light); }
+    .nav-item .icon { width: 18px; text-align: center; font-size: 0.9rem; flex-shrink: 0; }
 
-    /* Inputs & Forms */
-    .admin-input { width: 100%; padding: 0.625rem 0.875rem; border-radius: 0.625rem; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); font-family: inherit; font-size: 0.875rem; outline: none; transition: border-color 0.2s; }
-    .admin-input:focus { border-color: #7C3AED; }
-    .admin-textarea { width: 100%; padding: 0.625rem 0.875rem; border-radius: 0.625rem; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); font-family: inherit; font-size: 0.875rem; outline: none; resize: vertical; min-height: 5rem; transition: border-color 0.2s; }
-    .admin-textarea:focus { border-color: #7C3AED; }
-    .admin-select { width: 100%; padding: 0.625rem 0.875rem; border-radius: 0.625rem; border: 1px solid var(--border-subtle); background: var(--bg-card); color: var(--text-primary); font-family: inherit; font-size: 0.875rem; outline: none; cursor: pointer; }
+    .nav-footer { padding: 0.75rem 0.625rem; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 2px; }
 
-    /* Stat cards */
-    .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 1rem; padding: 1.25rem; transition: transform 0.2s; }
-    .stat-card:hover { transform: translateY(-3px); }
+    /* ── Top bar elements ── */
+    .topbar-left { display: flex; align-items: center; gap: 0.75rem; }
+    .page-title { font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 600; color: var(--t1); }
+    .topbar-right { display: flex; align-items: center; gap: 0.625rem; }
+    .icon-btn {
+      width: 34px; height: 34px; border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--t2); transition: all 0.15s;
+    }
+    .icon-btn:hover { background: var(--card-hover); border-color: var(--border-strong); }
+    .avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--violet), var(--gold));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.75rem; color: #fff;
+      font-family: 'Fraunces', serif;
+    }
 
-    /* Blog card */
-    .blog-item { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 0.875rem; padding: 1.1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; transition: border-color 0.2s; }
-    .blog-item:hover { border-color: rgba(124,58,237,0.3); }
+    /* ── Sections ── */
+    .section { display: none; animation: slip 0.22s ease; }
+    .section.active { display: block; }
+    @keyframes slip { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Toggle switch */
-    .toggle { position: relative; display: inline-block; width: 38px; height: 22px; }
-    .toggle input { opacity: 0; width: 0; height: 0; }
-    .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: rgba(255,255,255,0.1); border-radius: 99px; transition: 0.3s; }
-    .toggle-slider:before { content: ""; position: absolute; height: 16px; width: 16px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
-    .toggle input:checked + .toggle-slider { background: #7C3AED; }
-    .toggle input:checked + .toggle-slider:before { transform: translateX(16px); }
+    /* ── Cards ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .card:hover { border-color: var(--border-strong); }
+    .card-lift:hover { transform: translateY(-2px); }
 
-    /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 1rem; }
-    .modal-overlay.open { display: flex; }
-    .modal-box { background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 1.25rem; padding: 2rem; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; animation: fadeIn 0.2s ease; }
+    /* ── Stats ── */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+    .stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; transition: all 0.2s; }
+    .stat:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+    .stat-emoji { font-size: 1.375rem; margin-bottom: 0.625rem; }
+    .stat-value { font-family: 'Fraunces', serif; font-size: 1.875rem; font-weight: 700; line-height: 1; }
+    .stat-label { font-size: 0.7rem; color: var(--t3); margin-top: 0.3rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
 
-    /* Activity feed */
-    .activity-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border-subtle); }
+    /* ── Inputs ── */
+    .field { display: flex; flex-direction: column; gap: 0.375rem; }
+    .field label { font-size: 0.78rem; font-weight: 600; color: var(--t2); }
+    .inp {
+      width: 100%; padding: 0.6rem 0.875rem;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: var(--bg3); color: var(--t1);
+      font-family: inherit; font-size: 0.875rem;
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .inp:focus { border-color: var(--violet); box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+    textarea.inp { resize: vertical; min-height: 80px; }
+    select.inp { cursor: pointer; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      padding: 0.575rem 1.1rem; border-radius: 8px;
+      font-size: 0.8rem; font-weight: 600; font-family: inherit;
+      cursor: pointer; transition: all 0.15s; border: none; white-space: nowrap;
+    }
+    .btn-violet { background: linear-gradient(135deg, var(--violet), #6D28D9); color: #fff; box-shadow: 0 3px 12px rgba(124,58,237,0.3); }
+    .btn-violet:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(124,58,237,0.4); }
+    .btn-ghost { background: var(--card); border: 1px solid var(--border); color: var(--t2); }
+    .btn-ghost:hover { background: var(--card-hover); color: var(--t1); }
+    .btn-danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: var(--red-light); }
+    .btn-danger:hover { background: rgba(239,68,68,0.18); }
+    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.75rem; }
+    .btn-xs { padding: 0.25rem 0.55rem; font-size: 0.7rem; }
+
+    /* ── Badges ── */
+    .badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.55rem; border-radius: 99px; font-size: 0.68rem; font-weight: 600; }
+    .badge-green { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); color: var(--green-light); }
+    .badge-violet { background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.25); color: var(--violet-light); }
+    .badge-gold { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.25); color: var(--gold-light); }
+    .badge-red { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: var(--red-light); }
+    .badge-live::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse2 2s infinite; }
+    @keyframes pulse2 { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+
+    /* ── Toggle ── */
+    .toggle { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .tslider { position: absolute; inset: 0; background: rgba(255,255,255,0.1); border-radius: 99px; cursor: pointer; transition: 0.25s; }
+    .tslider::before { content: ''; position: absolute; width: 16px; height: 16px; left: 3px; bottom: 3px; background: #fff; border-radius: 50%; transition: 0.25s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+    .toggle input:checked + .tslider { background: var(--violet); }
+    .toggle input:checked + .tslider::before { transform: translateX(18px); }
+
+    /* ── Modal ── */
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-bg.show { display: flex; }
+    .modal { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; animation: slip 0.2s ease; }
+    .modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .modal-head h2 { font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--t1); }
+    .close-btn { background: none; border: none; cursor: pointer; color: var(--t3); font-size: 1.25rem; line-height: 1; padding: 0.25rem; transition: color 0.15s; }
+    .close-btn:hover { color: var(--t1); }
+
+    /* ── Table-like rows ── */
+    .row { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.875rem 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 10px; transition: border-color 0.15s; }
+    .row:hover { border-color: var(--border-strong); }
+
+    /* ── Bar chart ── */
+    .chart { display: flex; align-items: flex-end; gap: 6px; height: 90px; }
+    .bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+    .bar-fill { width: 100%; border-radius: 5px 5px 0 0; background: linear-gradient(to top, var(--violet), var(--violet-light)); min-height: 4px; transition: height 0.6s ease; }
+    .bar-val { font-size: 0.6rem; color: var(--t3); }
+    .bar-day { font-size: 0.6rem; color: var(--t3); }
+
+    /* ── Progress bar ── */
+    .progress { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--violet), var(--violet-light)); transition: width 0.6s ease; }
+
+    /* ── Divider ── */
+    .divider { height: 1px; background: var(--border); margin: 1rem 0; }
+
+    /* ── Alert ── */
+    .alert { padding: 0.625rem 0.875rem; border-radius: 8px; font-size: 0.8rem; display: none; }
+    .alert-ok { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); color: var(--green-light); }
+    .alert-err { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: var(--red-light); }
+
+    /* ── Activity ── */
+    .activity-item { display: flex; gap: 0.625rem; padding: 0.625rem 0; border-bottom: 1px solid var(--border); }
+    .activity-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--violet); flex-shrink: 0; margin-top: 5px; }
     .activity-item:last-child { border-bottom: none; }
 
-    /* Bar chart */
-    .bar { display: flex; align-items: flex-end; gap: 0.375rem; height: 100px; }
-    .bar-col { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 1; }
-    .bar-fill { width: 100%; border-radius: 4px 4px 0 0; background: linear-gradient(to top, #7C3AED, #A78BFA); min-height: 4px; transition: height 0.6s ease; }
-    .bar-label { font-size: 0.625rem; color: var(--text-muted); }
+    /* ── Util ── */
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-1 { gap: 0.25rem; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-3 { gap: 0.75rem; }
+    .gap-4 { gap: 1rem; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    .flex-col { flex-direction: column; }
+    .mb-1 { margin-bottom: 0.375rem; }
+    .mb-2 { margin-bottom: 0.75rem; }
+    .mb-3 { margin-bottom: 1.25rem; }
+    .mb-4 { margin-bottom: 1.75rem; }
+    .mt-1 { margin-top: 0.375rem; }
+    .mt-2 { margin-top: 0.75rem; }
+    .truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .text-muted { color: var(--t3); font-size: 0.8rem; }
+    .text-sm { font-size: 0.8rem; }
+    .font-600 { font-weight: 600; }
+    .display { font-family: 'Fraunces', serif; }
+    .w-full { width: 100%; }
+    .wrap { flex-wrap: wrap; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .section-head h2 { font-family: 'Fraunces', serif; font-size: 1.25rem; color: var(--t1); }
 
     /* Responsive */
     @media (max-width: 768px) {
-      .sidebar { position: fixed; left: -15rem; z-index: 50; transition: left 0.3s; height: 100vh; }
-      .sidebar.open { left: 0; }
-      .admin-content { margin-left: 0; }
+      .sidebar { position: fixed; left: -100%; z-index: 50; transition: left 0.25s; }
+      .sidebar.mob-open { left: 0; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      #mob-toggle { display: flex !important; }
     }
-
-    .flex-between { display: flex; align-items: center; justify-content: space-between; }
-    .flex-center { display: flex; align-items: center; justify-content: center; }
-    .gap-2 { gap: 0.5rem; }
-    .gap-3 { gap: 0.75rem; }
-    .font-display { font-family: 'Fraunces', serif; }
-    h2 { margin: 0 0 1.25rem 0; font-family: 'Fraunces', serif; color: var(--text-primary); }
-    h3 { margin: 0 0 0.75rem 0; color: var(--text-primary); }
-    p { margin: 0; }
   </style>
 </head>
 <body>
-<div class="admin-wrapper">
+<div class="shell">
 
-  <!-- ═══ SIDEBAR ═══ -->
-  <aside class="sidebar" id="sidebar">
-    <!-- Logo -->
-    <div style="padding: 1.25rem 1rem; border-bottom: 1px solid var(--border-subtle);">
-      <div style="display: flex; align-items: center; gap: 0.625rem;">
-        <div class="flex-center font-display" style="width: 2.25rem; height: 2.25rem; border-radius: 0.625rem; font-size: 1rem; font-weight: 700; background: linear-gradient(135deg, #7C3AED, #F59E0B); color: white; flex-shrink: 0;">T</div>
+<!-- ════════════════ SIDEBAR ════════════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-icon">T</div>
+    <div class="brand-text">
+      <p>Toolsathi</p>
+      <p>Admin Panel</p>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <span class="nav-section-label">Main</span>
+    <button class="nav-item active" data-sec="overview">
+      <span class="icon">📊</span> Overview
+    </button>
+    <button class="nav-item" data-sec="tools">
+      <span class="icon">🛠️</span> Tools
+    </button>
+    <button class="nav-item" data-sec="blog">
+      <span class="icon">📝</span> Blog
+    </button>
+    <button class="nav-item" data-sec="analytics">
+      <span class="icon">📈</span> Analytics
+    </button>
+    <span class="nav-section-label">Admin</span>
+    <button class="nav-item" data-sec="settings">
+      <span class="icon">⚙️</span> Settings
+    </button>
+    <button class="nav-item" data-sec="password">
+      <span class="icon">🔐</span> Password
+    </button>
+  </nav>
+
+  <div class="nav-footer">
+    <a href="index.html" class="nav-item" style="text-decoration:none;">
+      <span class="icon">🏠</span> View Website
+    </a>
+    <button class="nav-item" onclick="doLogout()" style="color:var(--red-light);">
+      <span class="icon">🚪</span> Logout
+    </button>
+  </div>
+</aside>
+
+<!-- ════════════════ MAIN ════════════════ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button id="mob-toggle" class="icon-btn" style="display:none;" onclick="document.getElementById('sidebar').classList.toggle('mob-open')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <span class="page-title" id="page-title">Overview</span>
+    </div>
+    <div class="topbar-right">
+      <span class="badge badge-green badge-live">Live</span>
+      <span id="live-clock" class="text-muted" style="font-size:0.75rem; font-variant-numeric: tabular-nums;"></span>
+      <button class="icon-btn" id="theme-toggle" aria-label="Toggle theme">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FCD34D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
+      <div class="avatar">A</div>
+    </div>
+  </div>
+
+  <!-- Scrollable content -->
+  <div class="content">
+
+    <!-- ─── OVERVIEW ─── -->
+    <div id="sec-overview" class="section active">
+      <div class="section-head">
         <div>
-          <p class="font-display" style="font-size: 0.9rem; font-weight: 700; color: var(--text-primary); line-height: 1.2;">Toolsathi</p>
-          <p style="font-size: 0.7rem; color: var(--text-muted);">Admin Panel</p>
+          <h2>Welcome back, Admin 👋</h2>
+          <p class="text-muted" id="dt-display"></p>
+        </div>
+      </div>
+
+      <div class="stats-grid mb-4">
+        <div class="stat card-lift">
+          <div class="stat-emoji">🛠️</div>
+          <div class="stat-value" style="color:var(--violet-light);" id="st-tools">8</div>
+          <div class="stat-label">Tools Live</div>
+        </div>
+        <div class="stat card-lift">
+          <div class="stat-emoji">📝</div>
+          <div class="stat-value" style="color:var(--gold);" id="st-posts">0</div>
+          <div class="stat-label">Blog Posts</div>
+        </div>
+        <div class="stat card-lift">
+          <div class="stat-emoji">👁️</div>
+          <div class="stat-value" style="color:var(--green);" id="st-views">0</div>
+          <div class="stat-label">Page Views</div>
+        </div>
+        <div class="stat card-lift">
+          <div class="stat-emoji">🧮</div>
+          <div class="stat-value" style="color:var(--blue);" id="st-calcs">0</div>
+          <div class="stat-label">Calculations</div>
+        </div>
+      </div>
+
+      <div class="grid-2 mb-4">
+        <!-- Activity feed -->
+        <div class="card">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-600 text-sm">📋 Recent Activity</span>
+            <button onclick="clearActivity()" class="btn btn-xs btn-ghost">Clear</button>
+          </div>
+          <div id="activity-feed">
+            <p class="text-muted" style="font-size:0.78rem;">No recent activity yet.</p>
+          </div>
+        </div>
+
+        <!-- Quick links -->
+        <div class="card">
+          <p class="font-600 text-sm mb-2">⚡ Quick Access</p>
+          <div class="flex flex-col gap-2">
+            <a href="index.html" class="row" style="text-decoration:none;">
+              <span class="flex items-center gap-2 text-sm" style="color:var(--t2);">🏠 Homepage</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="ai-tools.html" class="row" style="text-decoration:none;">
+              <span class="flex items-center gap-2 text-sm" style="color:var(--t2);">🤖 AI Tools</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="blog.html" class="row" style="text-decoration:none;">
+              <span class="flex items-center gap-2 text-sm" style="color:var(--t2);">📝 Blog</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="about.html" class="row" style="text-decoration:none;">
+              <span class="flex items-center gap-2 text-sm" style="color:var(--t2);">👤 About</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="login.html" class="row" style="text-decoration:none;">
+              <span class="flex items-center gap-2 text-sm" style="color:var(--t2);">🔑 Login Page</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Site info -->
+      <div class="card">
+        <p class="font-600 text-sm mb-3">🌐 Site Information</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem;">
+          <div class="flex justify-between items-center" style="padding:0.5rem 0; border-bottom:1px solid var(--border);">
+            <span class="text-muted">Site Name</span><span class="text-sm font-600" id="si-name">Toolsathi</span>
+          </div>
+          <div class="flex justify-between items-center" style="padding:0.5rem 0; border-bottom:1px solid var(--border);">
+            <span class="text-muted">Creator</span><span class="text-sm font-600" id="si-creator">Kalva Ajay Kumar</span>
+          </div>
+          <div class="flex justify-between items-center" style="padding:0.5rem 0; border-bottom:1px solid var(--border);">
+            <span class="text-muted">Stack</span><span class="text-sm font-600">HTML / CSS / JS</span>
+          </div>
+          <div class="flex justify-between items-center" style="padding:0.5rem 0; border-bottom:1px solid var(--border);">
+            <span class="text-muted">Status</span><span class="badge badge-green">✅ Live</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Nav -->
-    <nav style="flex: 1; padding: 0.75rem; display: flex; flex-direction: column; gap: 0.25rem;">
-      <button class="nav-btn active" data-section="overview"><span>📊</span> Overview</button>
-      <button class="nav-btn" data-section="tools"><span>🛠️</span> Tools Management</button>
-      <button class="nav-btn" data-section="blog"><span>📝</span> Blog Management</button>
-      <button class="nav-btn" data-section="analytics"><span>📈</span> Analytics</button>
-      <button class="nav-btn" data-section="settings"><span>⚙️</span> Settings</button>
-    </nav>
-
-    <!-- Bottom links -->
-    <div style="padding: 0.75rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 0.25rem;">
-      <a href="index.html" class="nav-btn" style="text-decoration: none; cursor: pointer;"><span>🏠</span> View Website</a>
-      <button class="nav-btn" onclick="adminLogout()" style="color: #F87171;"><span>🚪</span> Logout</button>
+    <!-- ─── TOOLS ─── -->
+    <div id="sec-tools" class="section">
+      <div class="section-head">
+        <h2>🛠️ Tools Management</h2>
+        <span class="text-muted">Toggle tool visibility & access.</span>
+      </div>
+      <div id="tools-list" class="flex flex-col gap-2"></div>
     </div>
-  </aside>
 
-  <!-- ═══ MAIN CONTENT ═══ -->
-  <div class="admin-content">
-
-    <!-- Top bar -->
-    <header style="position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; height: 3.75rem; border-bottom: 1px solid var(--border-subtle); background: var(--bg-secondary);">
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <button id="sidebar-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display: none; background: none; border: none; cursor: pointer; color: var(--text-primary); padding: 0.25rem;" aria-label="Toggle sidebar">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    <!-- ─── BLOG ─── -->
+    <div id="sec-blog" class="section">
+      <div class="section-head">
+        <h2>📝 Blog Management</h2>
+        <button class="btn btn-violet" onclick="openPost()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Post
         </button>
-        <h1 id="page-title" class="font-display" style="font-size: 1.1rem; margin: 0; color: var(--text-primary);">Overview</h1>
       </div>
-      <div style="display: flex; align-items: center; gap: 0.75rem;">
-        <span class="badge badge-green" style="font-size: 0.7rem; padding: 0.25rem 0.625rem;">● Live</span>
-        <button class="theme-toggle flex-center" id="theme-toggle" aria-label="Toggle dark mode" style="width: 2.25rem; height: 2.25rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); cursor: pointer;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FCD34D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        </button>
-        <div class="flex-center font-display" style="width: 2rem; height: 2rem; border-radius: 50%; background: linear-gradient(135deg, #7C3AED, #F59E0B); color: white; font-size: 0.8rem; font-weight: 700;">A</div>
+
+      <!-- Filters -->
+      <div class="flex gap-2 mb-3 wrap">
+        <button class="blog-filter btn btn-sm btn-violet" data-f="all" onclick="filterPosts('all',this)">All</button>
+        <button class="blog-filter btn btn-sm btn-ghost" data-f="published" onclick="filterPosts('published',this)">✅ Published</button>
+        <button class="blog-filter btn btn-sm btn-ghost" data-f="draft" onclick="filterPosts('draft',this)">📦 Drafts</button>
       </div>
-    </header>
 
-    <!-- ═══════════════════════════════
-         SECTION: OVERVIEW
-    ════════════════════════════════ -->
-    <section id="overview" class="admin-section active">
-      <div style="display: flex; flex-direction: column; gap: 1.5rem; max-width: 900px;">
-
-        <div>
-          <h2 style="font-size: 1.375rem; margin-bottom: 0.25rem;">Welcome back, Admin 👋</h2>
-          <p style="color: var(--text-muted); font-size: 0.875rem;" id="current-datetime"></p>
-        </div>
-
-        <!-- Stat cards -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
-          <div class="stat-card">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🛠️</div>
-            <div class="font-display" style="font-size: 1.875rem; font-weight: 700; color: #A78BFA;" id="stat-tools">6</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Tools Live</div>
-          </div>
-          <div class="stat-card">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📝</div>
-            <div class="font-display" style="font-size: 1.875rem; font-weight: 700; color: #F59E0B;" id="stat-posts">0</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Blog Posts</div>
-          </div>
-          <div class="stat-card">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">👁️</div>
-            <div class="font-display" style="font-size: 1.875rem; font-weight: 700; color: #10B981;" id="stat-views">0</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Page Views</div>
-          </div>
-          <div class="stat-card">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🤖</div>
-            <div class="font-display" style="font-size: 1.875rem; font-weight: 700; color: #3B82F6;">2</div>
-            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">AI Tools</div>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;">
-          <!-- Quick links -->
-          <div class="stat-card" style="padding: 1.25rem;">
-            <h3 style="font-size: 0.9rem; margin-bottom: 1rem;">⚡ Quick Links</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <a href="index.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='var(--border-subtle)'">🏠 Homepage</a>
-              <a href="ai-tools.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='var(--border-subtle)'">🤖 AI Tools</a>
-              <a href="blog.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='var(--border-subtle)'">📝 Blog</a>
-              <a href="about.html" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-secondary); text-decoration: none; font-size: 0.8rem; transition: border-color 0.2s;" onmouseover="this.style.borderColor='#7C3AED'" onmouseout="this.style.borderColor='var(--border-subtle)'">👤 About</a>
-            </div>
-          </div>
-
-          <!-- Recent activity -->
-          <div class="stat-card" style="padding: 1.25rem;">
-            <h3 style="font-size: 0.9rem; margin-bottom: 0.75rem;">📋 Recent Activity</h3>
-            <div id="activity-feed" style="font-size: 0.8rem;"></div>
-          </div>
-        </div>
-
-        <!-- Website info -->
-        <div class="stat-card" style="padding: 1.25rem;">
-          <h3 style="font-size: 0.9rem; margin-bottom: 0.75rem;">🌐 Website Info</h3>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
-            <div class="flex-between" style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle); grid-column: 1;"><span style="font-size:0.8rem;color:var(--text-muted);">Name</span><span style="font-size:0.8rem;font-weight:600;color:var(--text-primary);">Toolsathi</span></div>
-            <div class="flex-between" style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);"><span style="font-size:0.8rem;color:var(--text-muted);">Creator</span><span style="font-size:0.8rem;font-weight:600;color:var(--text-primary);">Kalva Ajay Kumar</span></div>
-            <div class="flex-between" style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);"><span style="font-size:0.8rem;color:var(--text-muted);">Stack</span><span style="font-size:0.8rem;font-weight:600;color:var(--text-primary);">HTML / CSS / JS</span></div>
-            <div class="flex-between" style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);"><span style="font-size:0.8rem;color:var(--text-muted);">Status</span><span style="font-size:0.8rem;font-weight:600;color:#10B981;">✅ Live</span></div>
-          </div>
-        </div>
-
+      <div id="blog-list" class="flex flex-col gap-2"></div>
+      <div id="blog-empty" class="card" style="display:none; text-align:center; padding:2.5rem;">
+        <div style="font-size:2rem; margin-bottom:0.625rem;">📝</div>
+        <p class="text-muted">No posts yet. Click "New Post" to get started.</p>
       </div>
-    </section>
-
-    <!-- ═══════════════════════════════
-         SECTION: TOOLS MANAGEMENT
-    ════════════════════════════════ -->
-    <section id="tools" class="admin-section">
-      <div style="max-width: 900px;">
-        <div class="flex-between" style="margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
-          <h2 style="margin: 0; font-size: 1.375rem;">Tools Management</h2>
-          <span style="font-size: 0.8rem; color: var(--text-muted);">Toggle visibility, open or preview any tool.</span>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 0.875rem;" id="tools-list">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════
-         SECTION: BLOG MANAGEMENT
-    ════════════════════════════════ -->
-    <section id="blog" class="admin-section">
-      <div style="max-width: 900px;">
-        <div class="flex-between" style="margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.75rem;">
-          <h2 style="margin: 0; font-size: 1.375rem;">Blog Management</h2>
-          <button class="btn-primary" onclick="openBlogModal()" style="padding: 0.5rem 1rem; font-size: 0.875rem; gap: 0.375rem; display: flex; align-items: center;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            New Post
-          </button>
-        </div>
-
-        <!-- Filter tabs -->
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
-          <button class="blog-filter-btn active" data-filter="all" onclick="filterBlog('all',this)" style="padding: 0.375rem 0.875rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; border: 1px solid rgba(124,58,237,0.4); background: rgba(124,58,237,0.15); color: #A78BFA; cursor: pointer; font-family: inherit;">All</button>
-          <button class="blog-filter-btn" data-filter="published" onclick="filterBlog('published',this)" style="padding: 0.375rem 0.875rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--border-subtle); background: transparent; color: var(--text-muted); cursor: pointer; font-family: inherit;">Published</button>
-          <button class="blog-filter-btn" data-filter="draft" onclick="filterBlog('draft',this)" style="padding: 0.375rem 0.875rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; border: 1px solid var(--border-subtle); background: transparent; color: var(--text-muted); cursor: pointer; font-family: inherit;">Drafts</button>
-        </div>
-
-        <div id="blog-list" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
-        <div id="blog-empty" style="display: none; text-align: center; padding: 3rem; color: var(--text-muted);">
-          <div style="font-size: 2rem; margin-bottom: 0.75rem;">📝</div>
-          <p style="font-size: 0.875rem;">No posts yet. Create your first post!</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════
-         SECTION: ANALYTICS
-    ════════════════════════════════ -->
-    <section id="analytics" class="admin-section">
-      <div style="max-width: 900px;">
-        <h2 style="font-size: 1.375rem; margin-bottom: 1.5rem;">Analytics</h2>
-
-        <!-- Stats row -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-          <div class="stat-card text-center" style="text-align: center;">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">👁️</div>
-            <div class="font-display" style="font-size: 1.75rem; font-weight: 700; color: #A78BFA;" id="a-views">-</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Total Views</div>
-          </div>
-          <div class="stat-card text-center" style="text-align: center;">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🖱️</div>
-            <div class="font-display" style="font-size: 1.75rem; font-weight: 700; color: #F59E0B;" id="a-sessions">-</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Sessions</div>
-          </div>
-          <div class="stat-card text-center" style="text-align: center;">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📄</div>
-            <div class="font-display" style="font-size: 1.75rem; font-weight: 700; color: #10B981;" id="a-top-page">-</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Most Visited</div>
-          </div>
-          <div class="stat-card text-center" style="text-align: center;">
-            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧮</div>
-            <div class="font-display" style="font-size: 1.75rem; font-weight: 700; color: #3B82F6;" id="a-calcs">-</div>
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem;">Calculations</div>
-          </div>
-        </div>
-
-        <!-- Page views chart -->
-        <div class="stat-card" style="padding: 1.5rem; margin-bottom: 1.25rem;">
-          <div class="flex-between" style="margin-bottom: 1.25rem;">
-            <h3 style="font-size: 0.9rem; margin: 0;">📊 Page Views (Last 7 Days)</h3>
-            <button onclick="resetAnalytics()" style="font-size: 0.75rem; color: #F87171; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0.25rem 0.5rem;">Reset Data</button>
-          </div>
-          <div class="bar" id="bar-chart"></div>
-        </div>
-
-        <!-- Top pages -->
-        <div class="stat-card" style="padding: 1.5rem; margin-bottom: 1.25rem;">
-          <h3 style="font-size: 0.9rem; margin-bottom: 1rem;">🏆 Top Pages</h3>
-          <div id="top-pages" style="display: flex; flex-direction: column; gap: 0.625rem;"></div>
-        </div>
-
-        <!-- Track note -->
-        <div class="stat-card" style="padding: 1.25rem; border-color: rgba(124,58,237,0.25); background: rgba(124,58,237,0.05);">
-          <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6;">
-            ℹ️ Analytics are tracked locally via <code style="background: var(--bg-card); padding: 0.125rem 0.375rem; border-radius: 0.25rem;">localStorage</code>. Each page visit increments the counter. For real traffic data across devices, integrate <strong style="color: var(--text-secondary);">Google Analytics (GA4)</strong> by adding your Measurement ID to the site.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════════════
-         SECTION: SETTINGS
-    ════════════════════════════════ -->
-    <section id="settings" class="admin-section">
-      <div style="max-width: 600px;">
-        <h2 style="font-size: 1.375rem; margin-bottom: 1.5rem;">Settings</h2>
-
-        <!-- Change password -->
-        <div class="stat-card" style="padding: 1.5rem; margin-bottom: 1.25rem;">
-          <h3 style="font-size: 0.9rem; margin-bottom: 1rem;">🔐 Change Admin Password</h3>
-          <div style="display: flex; flex-direction: column; gap: 0.875rem;">
-            <div>
-              <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">Current Password</label>
-              <input type="password" id="cur-pass" class="admin-input" placeholder="Enter current password">
-            </div>
-            <div>
-              <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">New Password</label>
-              <input type="password" id="new-pass" class="admin-input" placeholder="Enter new password (min 4 chars)">
-            </div>
-            <div>
-              <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">Confirm New Password</label>
-              <input type="password" id="conf-pass" class="admin-input" placeholder="Confirm new password">
-            </div>
-            <div id="pass-msg" style="font-size: 0.8rem; display: none; padding: 0.5rem 0.75rem; border-radius: 0.5rem;"></div>
-            <button class="btn-primary" onclick="changePassword()" style="align-self: flex-start; padding: 0.625rem 1.25rem; font-size: 0.875rem;">Update Password</button>
-          </div>
-        </div>
-
-        <!-- Site info -->
-        <div class="stat-card" style="padding: 1.5rem; margin-bottom: 1.25rem;">
-          <h3 style="font-size: 0.9rem; margin-bottom: 1rem;">🌐 Site Configuration</h3>
-          <div style="display: flex; flex-direction: column; gap: 0.875rem;">
-            <div>
-              <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">Site Name</label>
-              <input type="text" id="site-name" class="admin-input" value="Toolsathi">
-            </div>
-            <div>
-              <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">Creator Name</label>
-              <input type="text" id="creator-name" class="admin-input" value="Kalva Ajay Kumar">
-            </div>
-            <div>
-              <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">YouTube Channel URL</label>
-              <input type="url" id="yt-url" class="admin-input" placeholder="https://youtube.com/@yourchannel">
-            </div>
-            <div>
-              <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">GitHub URL</label>
-              <input type="url" id="gh-url" class="admin-input" placeholder="https://github.com/yourusername">
-            </div>
-            <div id="settings-msg" style="font-size: 0.8rem; display: none; padding: 0.5rem 0.75rem; border-radius: 0.5rem;"></div>
-            <button class="btn-primary" onclick="saveSettings()" style="align-self: flex-start; padding: 0.625rem 1.25rem; font-size: 0.875rem;">Save Settings</button>
-          </div>
-        </div>
-
-        <!-- Danger zone -->
-        <div class="stat-card" style="padding: 1.5rem; border-color: rgba(239,68,68,0.2); background: rgba(239,68,68,0.04);">
-          <h3 style="font-size: 0.9rem; margin-bottom: 0.5rem; color: #F87171;">⚠️ Danger Zone</h3>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">These actions cannot be undone.</p>
-          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <button onclick="clearAllBlogPosts()" style="padding: 0.5rem 1rem; font-size: 0.8rem; font-family: inherit; border-radius: 0.5rem; border: 1px solid rgba(239,68,68,0.3); color: #F87171; background: transparent; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.1)'" onmouseout="this.style.background='transparent'">Clear All Blog Posts</button>
-            <button onclick="clearAllAnalytics()" style="padding: 0.5rem 1rem; font-size: 0.8rem; font-family: inherit; border-radius: 0.5rem; border: 1px solid rgba(239,68,68,0.3); color: #F87171; background: transparent; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='rgba(239,68,68,0.1)'" onmouseout="this.style.background='transparent'">Clear Analytics Data</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </div><!-- end admin-content -->
-</div><!-- end admin-wrapper -->
-
-<!-- ═══ BLOG POST MODAL ═══ -->
-<div class="modal-overlay" id="blog-modal">
-  <div class="modal-box">
-    <div class="flex-between" style="margin-bottom: 1.5rem;">
-      <h2 style="font-size: 1.125rem; margin: 0;" id="modal-title">New Blog Post</h2>
-      <button onclick="closeBlogModal()" style="background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1.25rem; line-height: 1;">✕</button>
     </div>
-    <form onsubmit="saveBlogPost(event)" style="display: flex; flex-direction: column; gap: 1rem;">
-      <input type="hidden" id="editing-id">
-      <div>
-        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">Post Title *</label>
-        <input type="text" id="post-title" class="admin-input" placeholder="Enter a compelling title..." required>
+
+    <!-- ─── ANALYTICS ─── -->
+    <div id="sec-analytics" class="section">
+      <div class="section-head">
+        <h2>📈 Analytics</h2>
+        <button class="btn btn-sm btn-ghost" onclick="resetAnalytics()">🔄 Reset Data</button>
       </div>
-      <div>
-        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">Category</label>
-        <select id="post-category" class="admin-select">
-          <option value="Student Tips">Student Tips</option>
-          <option value="Tech & AI">Tech & AI</option>
-          <option value="Career">Career</option>
-          <option value="Finance">Finance</option>
-          <option value="Study Hacks">Study Hacks</option>
-          <option value="Tutorial">Tutorial</option>
+
+      <div class="stats-grid mb-4">
+        <div class="stat card-lift">
+          <div class="stat-emoji">👁️</div>
+          <div class="stat-value" style="color:var(--violet-light);" id="an-views">0</div>
+          <div class="stat-label">Total Views</div>
+        </div>
+        <div class="stat card-lift">
+          <div class="stat-emoji">🖱️</div>
+          <div class="stat-value" style="color:var(--gold);" id="an-sessions">0</div>
+          <div class="stat-label">Sessions</div>
+        </div>
+        <div class="stat card-lift">
+          <div class="stat-emoji">📄</div>
+          <div class="stat-value" style="color:var(--green); font-size:1.1rem;" id="an-top">—</div>
+          <div class="stat-label">Top Page</div>
+        </div>
+        <div class="stat card-lift">
+          <div class="stat-emoji">🧮</div>
+          <div class="stat-value" style="color:var(--blue);" id="an-calcs">0</div>
+          <div class="stat-label">Calculations</div>
+        </div>
+      </div>
+
+      <div class="card mb-4">
+        <p class="font-600 text-sm mb-3">📊 Daily Views — Last 7 Days</p>
+        <div class="chart" id="chart"></div>
+      </div>
+
+      <div class="card mb-4">
+        <p class="font-600 text-sm mb-3">🏆 Top Pages</p>
+        <div id="top-pages"></div>
+      </div>
+
+      <div class="card" style="background:rgba(124,58,237,0.05); border-color:rgba(124,58,237,0.2);">
+        <p class="text-muted" style="line-height:1.7; font-size:0.78rem;">
+          ℹ️ Analytics tracked locally via <code style="background:var(--bg3); padding:1px 5px; border-radius:4px; font-size:0.75rem;">localStorage</code>.
+          Each page visit increments counters. For cross-device real analytics, add
+          <strong style="color:var(--t2);">Google Analytics GA4</strong> Measurement ID to your pages.
+        </p>
+      </div>
+    </div>
+
+    <!-- ─── SETTINGS ─── -->
+    <div id="sec-settings" class="section">
+      <div class="section-head"><h2>⚙️ Site Settings</h2></div>
+
+      <div class="card mb-4" style="max-width:560px;">
+        <p class="font-600 text-sm mb-3">🌐 Site Configuration</p>
+        <div class="flex flex-col gap-3">
+          <div class="field">
+            <label>Site Name</label>
+            <input class="inp" id="cfg-name" type="text" placeholder="Toolsathi">
+          </div>
+          <div class="field">
+            <label>Creator Name</label>
+            <input class="inp" id="cfg-creator" type="text" placeholder="Your name">
+          </div>
+          <div class="field">
+            <label>YouTube Channel URL</label>
+            <input class="inp" id="cfg-yt" type="url" placeholder="https://youtube.com/@channel">
+          </div>
+          <div class="field">
+            <label>GitHub URL</label>
+            <input class="inp" id="cfg-gh" type="url" placeholder="https://github.com/username">
+          </div>
+          <div class="field">
+            <label>Instagram URL</label>
+            <input class="inp" id="cfg-ig" type="url" placeholder="https://instagram.com/username">
+          </div>
+          <div class="field">
+            <label>Contact Email</label>
+            <input class="inp" id="cfg-email" type="email" placeholder="you@email.com">
+          </div>
+          <div id="cfg-msg" class="alert"></div>
+          <div><button class="btn btn-violet" onclick="saveConfig()">💾 Save Settings</button></div>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="card" style="max-width:560px; border-color:rgba(239,68,68,0.2); background:rgba(239,68,68,0.04);">
+        <p class="font-600 text-sm mb-1" style="color:var(--red-light);">⚠️ Danger Zone</p>
+        <p class="text-muted mb-3">These actions are permanent and cannot be undone.</p>
+        <div class="flex gap-2 wrap">
+          <button class="btn btn-danger btn-sm" onclick="dangerClearBlog()">🗑️ Delete All Posts</button>
+          <button class="btn btn-danger btn-sm" onclick="dangerClearAnalytics()">🗑️ Reset Analytics</button>
+          <button class="btn btn-danger btn-sm" onclick="dangerClearAll()">💣 Factory Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─── PASSWORD ─── -->
+    <div id="sec-password" class="section">
+      <div class="section-head"><h2>🔐 Change Password</h2></div>
+
+      <div class="card" style="max-width:440px;">
+        <div class="flex flex-col gap-3">
+          <div class="field">
+            <label>Current Password</label>
+            <input class="inp" id="pw-cur" type="password" placeholder="Enter current password">
+          </div>
+          <div class="field">
+            <label>New Password</label>
+            <input class="inp" id="pw-new" type="password" placeholder="Min 4 characters">
+          </div>
+          <div class="field">
+            <label>Confirm New Password</label>
+            <input class="inp" id="pw-conf" type="password" placeholder="Repeat new password">
+          </div>
+          <div id="pw-msg" class="alert"></div>
+          <div><button class="btn btn-violet" onclick="changePass()">🔒 Update Password</button></div>
+        </div>
+        <div class="divider"></div>
+        <p class="text-muted" style="font-size:0.75rem;">Default password is <strong style="color:var(--t2);">1234</strong>. Change it to something secure after your first login.</p>
+      </div>
+    </div>
+
+  </div><!-- end .content -->
+</div><!-- end .main -->
+</div><!-- end .shell -->
+
+<!-- ════════ BLOG MODAL ════════ -->
+<div class="modal-bg" id="post-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-title">New Post</h2>
+      <button class="close-btn" onclick="closePost()">✕</button>
+    </div>
+    <form onsubmit="submitPost(event)" class="flex flex-col gap-3">
+      <input type="hidden" id="post-id">
+      <div class="field">
+        <label>Title *</label>
+        <input class="inp" id="post-title" type="text" placeholder="Write a compelling title..." required>
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select class="inp" id="post-cat">
+          <option>Student Tips</option>
+          <option>Tech &amp; AI</option>
+          <option>Career</option>
+          <option>Finance</option>
+          <option>Study Hacks</option>
+          <option>Tutorial</option>
+          <option>Other</option>
         </select>
       </div>
-      <div>
-        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">Summary / Excerpt *</label>
-        <textarea id="post-summary" class="admin-textarea" placeholder="Brief description of the post..." required style="min-height: 4rem;"></textarea>
+      <div class="field">
+        <label>Summary *</label>
+        <textarea class="inp" id="post-summary" placeholder="Short description (shown in cards)..." required style="min-height:64px;"></textarea>
       </div>
-      <div>
-        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">Content *</label>
-        <textarea id="post-content" class="admin-textarea" placeholder="Write your full post content here..." required style="min-height: 8rem;"></textarea>
+      <div class="field">
+        <label>Content *</label>
+        <textarea class="inp" id="post-body" placeholder="Full blog post content..." required style="min-height:120px;"></textarea>
       </div>
-      <div>
-        <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 0.375rem;">Status</label>
-        <select id="post-status" class="admin-select">
-          <option value="published">Published</option>
-          <option value="draft">Draft</option>
+      <div class="field">
+        <label>Status</label>
+        <select class="inp" id="post-status">
+          <option value="published">✅ Published</option>
+          <option value="draft">📦 Draft</option>
         </select>
       </div>
-      <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem; justify-content: flex-end;">
-        <button type="button" onclick="closeBlogModal()" class="btn-secondary" style="padding: 0.625rem 1.25rem; font-size: 0.875rem;">Cancel</button>
-        <button type="submit" class="btn-primary" style="padding: 0.625rem 1.25rem; font-size: 0.875rem;">Save Post</button>
+      <div class="flex gap-2 justify-end mt-1">
+        <button type="button" class="btn btn-ghost" onclick="closePost()">Cancel</button>
+        <button type="submit" class="btn btn-violet">Save Post</button>
       </div>
     </form>
   </div>
 </div>
 
-<script src="js/script.js"></script>
-<script>
-// ══════════════════════════════════════════
-//  ADMIN CORE
-// ══════════════════════════════════════════
+<!-- ════════ VIEW POST MODAL ════════ -->
+<div class="modal-bg" id="view-modal">
+  <div class="modal" style="max-width:600px;">
+    <div class="modal-head">
+      <h2 id="view-title" style="font-size:1rem;"></h2>
+      <button class="close-btn" onclick="document.getElementById('view-modal').classList.remove('show')">✕</button>
+    </div>
+    <div id="view-meta" class="flex gap-2 mb-3 wrap"></div>
+    <p id="view-summary" class="text-muted mb-3" style="font-size:0.85rem; line-height:1.6;"></p>
+    <div class="divider"></div>
+    <p id="view-body" style="font-size:0.875rem; line-height:1.8; color:var(--t2); white-space:pre-wrap;"></p>
+  </div>
+</div>
 
-function adminLogout() {
+<script>
+// ═══════════════════════════════════════════════
+//  THEME — standalone (does NOT use script.js)
+// ═══════════════════════════════════════════════
+(function() {
+  const SUN = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FCD34D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+  const MOON = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+  let dark = localStorage.getItem('toolsathi-theme') !== 'light';
+
+  function apply(d) {
+    dark = d;
+    document.documentElement.setAttribute('data-theme', d ? 'dark' : 'light');
+    localStorage.setItem('toolsathi-theme', d ? 'dark' : 'light');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.innerHTML = d ? SUN : MOON;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    apply(dark);
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.addEventListener('click', () => apply(!dark));
+  });
+})();
+
+// ═══════════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════════
+function doLogout() {
+  if (!confirm('Log out of admin?')) return;
   localStorage.removeItem('toolsathi-admin');
   window.location.href = 'login.html';
 }
 
-// Date/time
-function updateDateTime() {
-  const el = document.getElementById('current-datetime');
-  if (el) el.textContent = new Date().toLocaleString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+// ═══════════════════════════════════════════════
+//  CLOCK
+// ═══════════════════════════════════════════════
+function tickClock() {
+  const el = document.getElementById('live-clock');
+  const dt = document.getElementById('dt-display');
+  const now = new Date();
+  if (el) el.textContent = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  if (dt) dt.textContent = now.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
-updateDateTime();
-setInterval(updateDateTime, 60000);
+tickClock();
+setInterval(tickClock, 1000);
 
-// ── Section switching ──────────────────────
-const navBtns = document.querySelectorAll('.nav-btn[data-section]');
-navBtns.forEach(btn => {
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+const NAV_ITEMS = document.querySelectorAll('.nav-item[data-sec]');
+NAV_ITEMS.forEach(btn => {
   btn.addEventListener('click', () => {
-    navBtns.forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+    NAV_ITEMS.forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     btn.classList.add('active');
-    const sec = document.getElementById(btn.dataset.section);
-    if (sec) sec.classList.add('active');
-    document.getElementById('page-title').textContent = btn.textContent.trim().replace(/^[\S\u00FF-\uFFFF]+ /, '');
+    document.getElementById('sec-' + btn.dataset.sec).classList.add('active');
+    document.getElementById('page-title').textContent = btn.querySelector('.icon').nextSibling.textContent.trim();
+    // Close mobile sidebar
+    document.getElementById('sidebar').classList.remove('mob-open');
   });
 });
 
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function uid() { return 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2,7); }
+function showMsg(id, msg, ok) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.className = 'alert ' + (ok ? 'alert-ok' : 'alert-err');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 3000);
+}
+function updateStats() {
+  const posts = getPosts();
+  const an = getAnalytics();
+  document.getElementById('st-posts').textContent = posts.length;
+  document.getElementById('st-views').textContent = an.views || 0;
+  document.getElementById('st-calcs').textContent = an.calcs || 0;
+  document.getElementById('an-views').textContent = an.views || 0;
+  document.getElementById('an-sessions').textContent = an.sessions || 0;
+  document.getElementById('an-calcs').textContent = an.calcs || 0;
+}
+
+// ═══════════════════════════════════════════════
+//  ACTIVITY
+// ═══════════════════════════════════════════════
+function getActivity() { return JSON.parse(localStorage.getItem('ts-activity') || '[]'); }
+function log(msg) {
+  const acts = getActivity();
+  acts.unshift({ msg, t: new Date().toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' }) });
+  if (acts.length > 30) acts.pop();
+  localStorage.setItem('ts-activity', JSON.stringify(acts));
+  renderActivity();
+}
+function renderActivity() {
+  const acts = getActivity();
+  const el = document.getElementById('activity-feed');
+  if (!el) return;
+  el.innerHTML = acts.length
+    ? acts.slice(0, 8).map(a => `
+      <div class="activity-item">
+        <div class="activity-dot"></div>
+        <div>
+          <p style="font-size:0.78rem; color:var(--t2);">${esc(a.msg)}</p>
+          <p style="font-size:0.68rem; color:var(--t3); margin-top:1px;">${a.t}</p>
+        </div>
+      </div>`).join('')
+    : '<p class="text-muted" style="font-size:0.78rem;">No recent activity.</p>';
+}
+function clearActivity() {
+  localStorage.removeItem('ts-activity');
+  renderActivity();
+}
+
+// ═══════════════════════════════════════════════
 //  TOOLS
-// ══════════════════════════════════════════
-const TOOLS_DATA = [
-  { id: 'cgpa', icon: '🎓', name: 'CGPA Calculator', path: 'tools/cgpa-calculator.html', tag: 'Academic', color: '#A78BFA' },
-  { id: 'emi',  icon: '💰', name: 'EMI Calculator',  path: 'tools/emi-calculator.html',  tag: 'Finance',  color: '#F59E0B' },
-  { id: 'pct',  icon: '📊', name: 'Percentage Calculator', path: 'tools/percentage-calculator.html', tag: 'Math', color: '#10B981' },
-  { id: 'age',  icon: '🎂', name: 'Age Calculator',  path: 'tools/age-calculator.html',  tag: 'Utility', color: '#A78BFA' },
-  { id: 'bmi',  icon: '⚖️', name: 'BMI Calculator',  path: 'tools/bmi-calculator.html',  tag: 'Health',  color: '#10B981' },
-  { id: 'disc', icon: '🏷️', name: 'Discount Calculator', path: 'tools/discount-calculator.html', tag: 'Shopping', color: '#F59E0B' },
-  { id: 'yt',   icon: '▶️', name: 'YouTube Title Generator', path: 'ai-tools.html', tag: 'AI', color: '#3B82F6' },
-  { id: 'res',  icon: '📄', name: 'Resume Summary Generator', path: 'ai-tools.html', tag: 'AI', color: '#3B82F6' },
+// ═══════════════════════════════════════════════
+const TOOLS = [
+  { id:'cgpa', icon:'🎓', name:'CGPA Calculator', path:'tools/cgpa-calculator.html', tag:'Academic', color:'#A78BFA' },
+  { id:'emi',  icon:'💰', name:'EMI Calculator',  path:'tools/emi-calculator.html',  tag:'Finance',  color:'#F59E0B' },
+  { id:'pct',  icon:'📊', name:'Percentage Calc', path:'tools/percentage-calculator.html', tag:'Math', color:'#10B981' },
+  { id:'age',  icon:'🎂', name:'Age Calculator',  path:'tools/age-calculator.html',   tag:'Utility', color:'#A78BFA' },
+  { id:'bmi',  icon:'⚖️', name:'BMI Calculator',  path:'tools/bmi-calculator.html',   tag:'Health',  color:'#10B981' },
+  { id:'disc', icon:'🏷️', name:'Discount Calc',   path:'tools/discount-calculator.html', tag:'Shopping', color:'#F59E0B' },
+  { id:'ytt',  icon:'▶️', name:'YouTube Title Gen', path:'ai-tools.html', tag:'AI', color:'#3B82F6' },
+  { id:'res',  icon:'📄', name:'Resume Summary Gen', path:'ai-tools.html', tag:'AI', color:'#3B82F6' },
 ];
 
-function getToolStates() {
-  return JSON.parse(localStorage.getItem('toolsathi-tool-states') || '{}');
-}
-function saveToolStates(states) {
-  localStorage.setItem('toolsathi-tool-states', JSON.stringify(states));
-}
+function getToolStates() { return JSON.parse(localStorage.getItem('ts-tools') || '{}'); }
+function saveToolStates(s) { localStorage.setItem('ts-tools', JSON.stringify(s)); }
 
 function renderTools() {
   const states = getToolStates();
-  const list = document.getElementById('tools-list');
-  list.innerHTML = TOOLS_DATA.map(t => {
-    const isOn = states[t.id] !== false; // default on
+  document.getElementById('tools-list').innerHTML = TOOLS.map(t => {
+    const on = states[t.id] !== false;
     return `
-    <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 0.875rem; padding: 1rem 1.25rem;">
-      <div class="flex-between">
-        <div style="display: flex; align-items: center; gap: 0.875rem;">
-          <span style="font-size: 1.5rem;">${t.icon}</span>
-          <div>
-            <p style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin: 0 0 0.125rem 0;">${t.name}</p>
-            <span style="font-size: 0.7rem; padding: 0.125rem 0.5rem; border-radius: 99px; background: ${t.color}20; border: 1px solid ${t.color}40; color: ${t.color};">${t.tag}</span>
-          </div>
+    <div class="row" style="transition:all 0.2s;">
+      <div class="flex items-center gap-3">
+        <span style="font-size:1.375rem;">${t.icon}</span>
+        <div>
+          <p class="font-600" style="font-size:0.875rem; color:var(--t1);">${esc(t.name)}</p>
+          <span style="font-size:0.68rem; padding:1px 7px; border-radius:99px; background:${t.color}18; border:1px solid ${t.color}35; color:${t.color};">${t.tag}</span>
         </div>
-        <div style="display: flex; align-items: center; gap: 0.875rem;">
-          <label class="toggle">
-            <input type="checkbox" onchange="toggleTool('${t.id}', this.checked)" ${isOn ? 'checked' : ''}>
-            <span class="toggle-slider"></span>
-          </label>
-          <a href="${t.path}" target="_blank" class="btn-secondary" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; border-radius: 0.5rem; white-space: nowrap;">View →</a>
-        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="badge ${on ? 'badge-green' : 'badge-red'}">${on ? '● Live' : '○ Off'}</span>
+        <label class="toggle">
+          <input type="checkbox" ${on ? 'checked' : ''} onchange="toggleTool('${t.id}', this.checked)">
+          <span class="tslider"></span>
+        </label>
+        <a href="${t.path}" target="_blank" class="btn btn-ghost btn-sm">View →</a>
       </div>
     </div>`;
   }).join('');
 }
 
-function toggleTool(id, isOn) {
-  const states = getToolStates();
-  states[id] = isOn;
-  saveToolStates(states);
-  addActivity(`Tool "${TOOLS_DATA.find(t=>t.id===id)?.name}" ${isOn ? 'enabled ✅' : 'disabled 🔴'}`);
-}
-renderTools();
-
-// ══════════════════════════════════════════
-//  BLOG MANAGEMENT
-// ══════════════════════════════════════════
-let currentFilter = 'all';
-let editingId = null;
-
-function getPosts() {
-  return JSON.parse(localStorage.getItem('toolsathi-blog-posts') || '[]');
-}
-function savePosts(posts) {
-  localStorage.setItem('toolsathi-blog-posts', JSON.stringify(posts));
-  updateStatCounts();
+function toggleTool(id, on) {
+  const s = getToolStates(); s[id] = on; saveToolStates(s);
+  renderTools();
+  log(`Tool "${TOOLS.find(t=>t.id===id)?.name}" ${on ? 'enabled ✅' : 'disabled 🔴'}`);
 }
 
-function renderBlog(filter) {
-  const posts = getPosts();
-  const filtered = filter === 'all' ? posts : posts.filter(p => p.status === filter);
+// ═══════════════════════════════════════════════
+//  BLOG
+// ═══════════════════════════════════════════════
+let blogFilter = 'all';
+
+function getPosts() { return JSON.parse(localStorage.getItem('ts-posts') || '[]'); }
+function savePosts(p) { localStorage.setItem('ts-posts', JSON.stringify(p)); updateStats(); }
+
+function renderBlog() {
+  const all = getPosts();
+  const posts = blogFilter === 'all' ? all : all.filter(p => p.status === blogFilter);
   const list = document.getElementById('blog-list');
   const empty = document.getElementById('blog-empty');
-
-  if (filtered.length === 0) {
-    list.innerHTML = '';
-    empty.style.display = 'block';
-    return;
-  }
+  if (!posts.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
   empty.style.display = 'none';
-  list.innerHTML = filtered.map(p => `
-    <div class="blog-item">
-      <div style="flex: 1; min-width: 0;">
-        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-          <p style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary); margin:0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escHtml(p.title)}</p>
-          <span style="font-size: 0.68rem; padding: 0.125rem 0.5rem; border-radius: 99px; background: rgba(124,58,237,0.12); color: #A78BFA; flex-shrink: 0;">${escHtml(p.category)}</span>
+  list.innerHTML = posts.map(p => `
+    <div class="row" style="flex-wrap:wrap; gap:0.75rem;">
+      <div style="flex:1; min-width:0;">
+        <div class="flex items-center gap-2 mb-1 wrap">
+          <span class="font-600 truncate" style="font-size:0.875rem; color:var(--t1); max-width:260px;">${esc(p.title)}</span>
+          <span class="badge badge-violet">${esc(p.category)}</span>
+          <span class="badge ${p.status==='published'?'badge-green':'badge-gold'}">${p.status==='published'?'✅ Live':'📦 Draft'}</span>
         </div>
-        <p style="font-size: 0.75rem; color: var(--text-muted); margin:0;">${escHtml(p.summary.substring(0, 80))}${p.summary.length > 80 ? '...' : ''}</p>
-        <p style="font-size: 0.7rem; color: var(--text-muted); margin: 0.25rem 0 0 0;">📅 ${p.date} &nbsp;·&nbsp; ${p.readTime}</p>
+        <p class="text-muted" style="font-size:0.75rem;">${esc(p.summary.slice(0,90))}${p.summary.length>90?'…':''}</p>
+        <p style="font-size:0.68rem; color:var(--t3); margin-top:3px;">📅 ${p.date} · ${p.readTime}</p>
       </div>
-      <div style="display: flex; align-items: center; gap: 0.625rem; flex-shrink: 0;">
-        <span style="font-size: 0.7rem; padding: 0.25rem 0.5rem; border-radius: 99px; ${p.status === 'published' ? 'background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);color:#34D399;' : 'background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.25);color:#FCD34D;'}">${p.status === 'published' ? '● Published' : '◌ Draft'}</span>
-        <button onclick="editPost('${p.id}')" style="padding: 0.375rem 0.625rem; border-radius: 0.5rem; border: 1px solid var(--border-subtle); background: transparent; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; font-family: inherit;" title="Edit">✏️</button>
-        <button onclick="togglePostStatus('${p.id}')" style="padding: 0.375rem 0.625rem; border-radius: 0.5rem; border: 1px solid var(--border-subtle); background: transparent; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; font-family: inherit;" title="Toggle Status">${p.status === 'published' ? '📦' : '🚀'}</button>
-        <button onclick="deletePost('${p.id}')" style="padding: 0.375rem 0.625rem; border-radius: 0.5rem; border: 1px solid rgba(239,68,68,0.2); background: transparent; color: #F87171; font-size: 0.75rem; cursor: pointer; font-family: inherit;" title="Delete">🗑️</button>
+      <div class="flex items-center gap-2 flex-wrap">
+        <button class="btn btn-ghost btn-sm" onclick="viewPost('${p.id}')">👁️</button>
+        <button class="btn btn-ghost btn-sm" onclick="openPost('${p.id}')">✏️</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleStatus('${p.id}')" title="${p.status==='published'?'Move to Draft':'Publish'}">${p.status==='published'?'📦':'🚀'}</button>
+        <button class="btn btn-danger btn-sm" onclick="delPost('${p.id}')">🗑️</button>
       </div>
     </div>`).join('');
 }
 
-function filterBlog(filter, btn) {
-  currentFilter = filter;
-  document.querySelectorAll('.blog-filter-btn').forEach(b => {
-    b.style.background = 'transparent';
-    b.style.color = 'var(--text-muted)';
-    b.style.borderColor = 'var(--border-subtle)';
+function filterPosts(f, btn) {
+  blogFilter = f;
+  document.querySelectorAll('.blog-filter').forEach(b => {
+    b.className = 'blog-filter btn btn-sm btn-ghost';
   });
-  btn.style.background = 'rgba(124,58,237,0.15)';
-  btn.style.color = '#A78BFA';
-  btn.style.borderColor = 'rgba(124,58,237,0.4)';
-  renderBlog(filter);
+  btn.className = 'blog-filter btn btn-sm btn-violet';
+  renderBlog();
 }
 
-function openBlogModal(id) {
-  editingId = id || null;
-  const modal = document.getElementById('blog-modal');
-  document.getElementById('modal-title').textContent = id ? 'Edit Post' : 'New Blog Post';
-  document.getElementById('editing-id').value = id || '';
-
+function openPost(id) {
+  document.getElementById('post-id').value = id || '';
+  document.getElementById('modal-title').textContent = id ? 'Edit Post' : 'New Post';
   if (id) {
-    const post = getPosts().find(p => p.id === id);
-    if (post) {
-      document.getElementById('post-title').value = post.title;
-      document.getElementById('post-category').value = post.category;
-      document.getElementById('post-summary').value = post.summary;
-      document.getElementById('post-content').value = post.content;
-      document.getElementById('post-status').value = post.status;
-    }
+    const p = getPosts().find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('post-title').value = p.title;
+    document.getElementById('post-cat').value = p.category;
+    document.getElementById('post-summary').value = p.summary;
+    document.getElementById('post-body').value = p.body;
+    document.getElementById('post-status').value = p.status;
   } else {
     document.getElementById('post-title').value = '';
-    document.getElementById('post-category').value = 'Student Tips';
+    document.getElementById('post-cat').value = 'Student Tips';
     document.getElementById('post-summary').value = '';
-    document.getElementById('post-content').value = '';
+    document.getElementById('post-body').value = '';
     document.getElementById('post-status').value = 'published';
   }
-  modal.classList.add('open');
-  document.getElementById('post-title').focus();
+  document.getElementById('post-modal').classList.add('show');
+  setTimeout(() => document.getElementById('post-title').focus(), 100);
 }
 
-function closeBlogModal() {
-  document.getElementById('blog-modal').classList.remove('open');
-}
+function closePost() { document.getElementById('post-modal').classList.remove('show'); }
 
-function saveBlogPost(e) {
+function submitPost(e) {
   e.preventDefault();
-  const id = document.getElementById('editing-id').value;
+  const id = document.getElementById('post-id').value;
   const title = document.getElementById('post-title').value.trim();
-  const category = document.getElementById('post-category').value;
+  const category = document.getElementById('post-cat').value;
   const summary = document.getElementById('post-summary').value.trim();
-  const content = document.getElementById('post-content').value.trim();
+  const body = document.getElementById('post-body').value.trim();
   const status = document.getElementById('post-status').value;
-  const wordCount = content.split(/\s+/).length;
-  const readTime = Math.max(1, Math.round(wordCount / 200)) + ' min read';
+  const words = body.split(/\s+/).length;
+  const readTime = Math.max(1, Math.round(words / 200)) + ' min read';
 
   const posts = getPosts();
   if (id) {
-    const idx = posts.findIndex(p => p.id === id);
-    if (idx >= 0) { posts[idx] = { ...posts[idx], title, category, summary, content, status, readTime, updated: new Date().toLocaleDateString('en-IN') }; }
-    addActivity(`Post "${title}" updated ✏️`);
+    const i = posts.findIndex(p => p.id === id);
+    if (i >= 0) posts[i] = { ...posts[i], title, category, summary, body, status, readTime, updated: new Date().toLocaleDateString('en-IN') };
+    log(`Post "${title}" updated ✏️`);
   } else {
-    posts.unshift({ id: 'post_' + Date.now(), title, category, summary, content, status, readTime, date: new Date().toLocaleDateString('en-IN'), updated: null });
-    addActivity(`New post "${title}" ${status === 'published' ? 'published 🚀' : 'saved as draft 📦'}`);
+    posts.unshift({ id: uid(), title, category, summary, body, status, readTime, date: new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' }) });
+    log(`Post "${title}" ${status === 'published' ? 'published 🚀' : 'saved as draft 📦'}`);
   }
   savePosts(posts);
-  renderBlog(currentFilter);
-  closeBlogModal();
+  renderBlog();
+  closePost();
 }
 
-function editPost(id) { openBlogModal(id); }
+function viewPost(id) {
+  const p = getPosts().find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('view-title').textContent = p.title;
+  document.getElementById('view-meta').innerHTML = `
+    <span class="badge badge-violet">${esc(p.category)}</span>
+    <span class="badge ${p.status==='published'?'badge-green':'badge-gold'}">${p.status}</span>
+    <span class="text-muted" style="font-size:0.72rem;">📅 ${p.date} · ${p.readTime}</span>`;
+  document.getElementById('view-summary').textContent = p.summary;
+  document.getElementById('view-body').textContent = p.body;
+  document.getElementById('view-modal').classList.add('show');
+}
 
-function deletePost(id) {
-  if (!confirm('Delete this post? This cannot be undone.')) return;
+function toggleStatus(id) {
+  const posts = getPosts();
+  const i = posts.findIndex(p => p.id === id);
+  if (i < 0) return;
+  posts[i].status = posts[i].status === 'published' ? 'draft' : 'published';
+  log(`"${posts[i].title}" → ${posts[i].status} ${posts[i].status==='published'?'🚀':'📦'}`);
+  savePosts(posts);
+  renderBlog();
+}
+
+function delPost(id) {
+  if (!confirm('Delete this post permanently?')) return;
   const posts = getPosts().filter(p => p.id !== id);
   savePosts(posts);
-  renderBlog(currentFilter);
-  addActivity('Post deleted 🗑️');
+  renderBlog();
+  log('Post deleted 🗑️');
 }
 
-function togglePostStatus(id) {
-  const posts = getPosts();
-  const idx = posts.findIndex(p => p.id === id);
-  if (idx >= 0) {
-    posts[idx].status = posts[idx].status === 'published' ? 'draft' : 'published';
-    addActivity(`"${posts[idx].title}" ${posts[idx].status === 'published' ? 'published 🚀' : 'moved to draft 📦'}`);
-    savePosts(posts);
-    renderBlog(currentFilter);
-  }
-}
-
-function clearAllBlogPosts() {
-  if (!confirm('Delete ALL blog posts? This cannot be undone.')) return;
+function dangerClearBlog() {
+  if (!confirm('Delete ALL blog posts? This is permanent.')) return;
   savePosts([]);
-  renderBlog(currentFilter);
-  addActivity('All blog posts cleared 🗑️');
+  renderBlog();
+  log('All blog posts deleted 💣');
 }
 
-renderBlog('all');
-
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════════════
 //  ANALYTICS
-// ══════════════════════════════════════════
-function getAnalytics() {
-  return JSON.parse(localStorage.getItem('toolsathi-analytics') || '{"views":0,"sessions":0,"calcs":0,"pages":{},"daily":[]}');
-}
-function saveAnalytics(a) { localStorage.setItem('toolsathi-analytics', JSON.stringify(a)); }
+// ═══════════════════════════════════════════════
+function getAnalytics() { return JSON.parse(localStorage.getItem('ts-analytics') || '{"views":0,"sessions":0,"calcs":0,"pages":{},"daily":[]}'); }
+function saveAnalytics(a) { localStorage.setItem('ts-analytics', JSON.stringify(a)); }
 
-// Track this visit
-(function trackVisit() {
+// Track this admin visit
+(function() {
   const a = getAnalytics();
-  a.views = (a.views || 0) + 1;
-  a.sessions = (a.sessions || 0) + 1;
-  a.pages['admin.html'] = (a.pages['admin.html'] || 0) + 1;
-  // Daily tracking
-  const today = new Date().toLocaleDateString('en-IN', { weekday: 'short' });
-  if (!Array.isArray(a.daily) || a.daily.length !== 7) {
+  a.views = (a.views||0) + 1;
+  a.sessions = (a.sessions||0) + 1;
+  a.pages = a.pages || {};
+  a.pages['admin.html'] = (a.pages['admin.html']||0) + 1;
+  // Seed daily data if empty
+  if (!Array.isArray(a.daily) || a.daily.length < 7) {
     const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    a.daily = days.map(d => ({ day: d, count: Math.floor(Math.random() * 20) })); // seed with sample
+    a.daily = days.map(d => ({ day:d, count: Math.floor(Math.random()*15) }));
   }
-  const todayEntry = a.daily.find(d => d.day === today);
-  if (todayEntry) todayEntry.count++;
+  const dayName = new Date().toLocaleDateString('en-US', { weekday: 'short' }).slice(0,3);
+  const entry = a.daily.find(d => d.day === dayName);
+  if (entry) entry.count++;
   saveAnalytics(a);
 })();
 
 function renderAnalytics() {
   const a = getAnalytics();
-  document.getElementById('a-views').textContent = a.views || 0;
-  document.getElementById('a-sessions').textContent = a.sessions || 0;
-  document.getElementById('a-calcs').textContent = a.calcs || 0;
-  document.getElementById('stat-views').textContent = a.views || 0;
+  document.getElementById('an-views').textContent = a.views || 0;
+  document.getElementById('an-sessions').textContent = a.sessions || 0;
+  document.getElementById('an-calcs').textContent = a.calcs || 0;
 
-  // Top page
   const pages = a.pages || {};
-  const topPage = Object.entries(pages).sort((x,y) => y[1]-x[1])[0];
-  document.getElementById('a-top-page').textContent = topPage ? topPage[0].replace('.html','') : '—';
+  const top = Object.entries(pages).sort((x,y) => y[1]-x[1])[0];
+  document.getElementById('an-top').textContent = top ? top[0].replace('.html','') : '—';
 
   // Bar chart
   const daily = Array.isArray(a.daily) ? a.daily : [];
-  const maxVal = Math.max(...daily.map(d => d.count), 1);
-  document.getElementById('bar-chart').innerHTML = daily.map(d => `
+  const max = Math.max(...daily.map(d => d.count), 1);
+  document.getElementById('chart').innerHTML = daily.map(d => `
     <div class="bar-col">
-      <span style="font-size:0.625rem;color:var(--text-muted);margin-bottom:2px;">${d.count}</span>
-      <div class="bar-fill" style="height:${Math.round((d.count/maxVal)*80)}px;"></div>
-      <span class="bar-label">${d.day}</span>
+      <span class="bar-val">${d.count}</span>
+      <div class="bar-fill" style="height:${Math.round((d.count/max)*78)}px;"></div>
+      <span class="bar-day">${d.day}</span>
     </div>`).join('');
 
   // Top pages
-  const sortedPages = Object.entries(pages).sort((a,b) => b[1]-a[1]).slice(0, 6);
-  document.getElementById('top-pages').innerHTML = sortedPages.length
-    ? sortedPages.map(([page, count]) => `
-      <div class="flex-between" style="padding: 0.5rem 0; border-bottom: 1px solid var(--border-subtle);">
-        <span style="font-size:0.8rem;color:var(--text-secondary);">📄 ${page}</span>
-        <span style="font-size:0.8rem;font-weight:600;color:var(--text-primary);">${count} views</span>
+  const sorted = Object.entries(pages).sort((a,b) => b[1]-a[1]).slice(0,8);
+  const maxPageViews = sorted[0]?.[1] || 1;
+  document.getElementById('top-pages').innerHTML = sorted.length
+    ? sorted.map(([pg, cnt]) => `
+      <div style="margin-bottom:0.625rem;">
+        <div class="flex justify-between items-center mb-1">
+          <span class="text-muted" style="font-size:0.78rem; truncate;">📄 ${esc(pg)}</span>
+          <span class="text-sm font-600">${cnt}</span>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:${Math.round((cnt/maxPageViews)*100)}%;"></div></div>
       </div>`).join('')
-    : '<p style="font-size:0.8rem;color:var(--text-muted);">No data yet. Visit some pages first.</p>';
+    : '<p class="text-muted" style="font-size:0.78rem;">No page data yet.</p>';
 }
 
 function resetAnalytics() {
-  if (!confirm('Reset all analytics data?')) return;
-  localStorage.removeItem('toolsathi-analytics');
+  if (!confirm('Reset ALL analytics data?')) return;
+  localStorage.removeItem('ts-analytics');
   renderAnalytics();
-  addActivity('Analytics data reset 🔄');
+  updateStats();
+  log('Analytics reset 🔄');
+}
+function dangerClearAnalytics() {
+  if (!confirm('Clear all analytics?')) return;
+  localStorage.removeItem('ts-analytics');
+  renderAnalytics();
+  updateStats();
+  log('Analytics cleared 🗑️');
 }
 
-function clearAllAnalytics() {
-  if (!confirm('Clear all analytics data?')) return;
-  localStorage.removeItem('toolsathi-analytics');
-  renderAnalytics();
-  addActivity('Analytics cleared 🗑️');
-}
-
-renderAnalytics();
-
-// ══════════════════════════════════════════
+// ═══════════════════════════════════════════════
 //  SETTINGS
-// ══════════════════════════════════════════
-function loadSettings() {
-  const s = JSON.parse(localStorage.getItem('toolsathi-settings') || '{}');
-  if (s.siteName) document.getElementById('site-name').value = s.siteName;
-  if (s.creatorName) document.getElementById('creator-name').value = s.creatorName;
-  if (s.ytUrl) document.getElementById('yt-url').value = s.ytUrl;
-  if (s.ghUrl) document.getElementById('gh-url').value = s.ghUrl;
+// ═══════════════════════════════════════════════
+function getConfig() { return JSON.parse(localStorage.getItem('ts-config') || '{}'); }
+function loadConfig() {
+  const c = getConfig();
+  document.getElementById('cfg-name').value = c.name || 'Toolsathi';
+  document.getElementById('cfg-creator').value = c.creator || 'Kalva Ajay Kumar';
+  document.getElementById('cfg-yt').value = c.yt || '';
+  document.getElementById('cfg-gh').value = c.gh || '';
+  document.getElementById('cfg-ig').value = c.ig || '';
+  document.getElementById('cfg-email').value = c.email || '';
+  // Update overview info
+  document.getElementById('si-name').textContent = c.name || 'Toolsathi';
+  document.getElementById('si-creator').textContent = c.creator || 'Kalva Ajay Kumar';
 }
-loadSettings();
-
-function saveSettings() {
-  const s = {
-    siteName: document.getElementById('site-name').value,
-    creatorName: document.getElementById('creator-name').value,
-    ytUrl: document.getElementById('yt-url').value,
-    ghUrl: document.getElementById('gh-url').value,
+function saveConfig() {
+  const c = {
+    name:    document.getElementById('cfg-name').value.trim(),
+    creator: document.getElementById('cfg-creator').value.trim(),
+    yt:      document.getElementById('cfg-yt').value.trim(),
+    gh:      document.getElementById('cfg-gh').value.trim(),
+    ig:      document.getElementById('cfg-ig').value.trim(),
+    email:   document.getElementById('cfg-email').value.trim(),
   };
-  localStorage.setItem('toolsathi-settings', JSON.stringify(s));
-  showMsg('settings-msg', 'Settings saved!', true);
-  addActivity('Settings updated ⚙️');
+  localStorage.setItem('ts-config', JSON.stringify(c));
+  loadConfig();
+  showMsg('cfg-msg', '✅ Settings saved successfully!', true);
+  log('Site settings updated ⚙️');
 }
 
-function changePassword() {
-  const cur = document.getElementById('cur-pass').value;
-  const nw = document.getElementById('new-pass').value;
-  const conf = document.getElementById('conf-pass').value;
-  const storedPass = localStorage.getItem('toolsathi-admin-pass') || '1234';
-
-  if (cur !== storedPass) return showMsg('pass-msg', '❌ Current password is incorrect.', false);
-  if (nw.length < 4) return showMsg('pass-msg', '❌ New password must be at least 4 characters.', false);
-  if (nw !== conf) return showMsg('pass-msg', '❌ Passwords do not match.', false);
-
-  localStorage.setItem('toolsathi-admin-pass', nw);
-  showMsg('pass-msg', '✅ Password changed successfully!', true);
-  document.getElementById('cur-pass').value = '';
-  document.getElementById('new-pass').value = '';
-  document.getElementById('conf-pass').value = '';
-  addActivity('Admin password changed 🔐');
+function dangerClearAll() {
+  if (!confirm('FACTORY RESET — delete ALL admin data (posts, analytics, settings, activity)? This cannot be undone!')) return;
+  ['ts-posts','ts-analytics','ts-config','ts-activity','ts-tools'].forEach(k => localStorage.removeItem(k));
+  renderBlog(); renderAnalytics(); loadConfig(); renderTools(); renderActivity(); updateStats();
+  log('Factory reset complete 💣');
 }
 
-function showMsg(id, msg, ok) {
-  const el = document.getElementById(id);
-  el.textContent = msg;
-  el.style.display = 'block';
-  el.style.background = ok ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)';
-  el.style.border = `1px solid ${ok ? 'rgba(16,185,129,0.25)' : 'rgba(239,68,68,0.25)'}`;
-  el.style.color = ok ? '#34D399' : '#F87171';
-  setTimeout(() => { el.style.display = 'none'; }, 3000);
+// ═══════════════════════════════════════════════
+//  PASSWORD
+// ═══════════════════════════════════════════════
+function changePass() {
+  const cur  = document.getElementById('pw-cur').value;
+  const nw   = document.getElementById('pw-new').value;
+  const conf = document.getElementById('pw-conf').value;
+  const stored = localStorage.getItem('ts-admin-pass') || '1234';
+  if (cur !== stored) return showMsg('pw-msg', '❌ Current password is wrong.', false);
+  if (nw.length < 4)  return showMsg('pw-msg', '❌ Password must be at least 4 characters.', false);
+  if (nw !== conf)    return showMsg('pw-msg', '❌ Passwords do not match.', false);
+  localStorage.setItem('ts-admin-pass', nw);
+  showMsg('pw-msg', '✅ Password updated! Use it next time you log in.', true);
+  ['pw-cur','pw-new','pw-conf'].forEach(id => document.getElementById(id).value = '');
+  log('Admin password changed 🔐');
 }
 
-// ══════════════════════════════════════════
-//  ACTIVITY FEED
-// ══════════════════════════════════════════
-function getActivities() {
-  return JSON.parse(localStorage.getItem('toolsathi-activity') || '[]');
-}
-function addActivity(msg) {
-  const activities = getActivities();
-  activities.unshift({ msg, time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) });
-  if (activities.length > 20) activities.pop();
-  localStorage.setItem('toolsathi-activity', JSON.stringify(activities));
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Default password init
+  if (!localStorage.getItem('ts-admin-pass')) localStorage.setItem('ts-admin-pass', '1234');
+  renderTools();
+  renderBlog();
   renderActivity();
-}
-function renderActivity() {
-  const activities = getActivities();
-  const feed = document.getElementById('activity-feed');
-  if (!feed) return;
-  feed.innerHTML = activities.length
-    ? activities.slice(0, 5).map(a => `
-      <div class="activity-item">
-        <div style="flex: 1;">
-          <p style="font-size: 0.78rem; color: var(--text-secondary); margin: 0;">${escHtml(a.msg)}</p>
-          <p style="font-size: 0.68rem; color: var(--text-muted); margin: 0.1rem 0 0 0;">${a.time}</p>
-        </div>
-      </div>`).join('')
-    : '<p style="font-size:0.78rem;color:var(--text-muted);">No recent activity.</p>';
-}
-renderActivity();
+  renderAnalytics();
+  loadConfig();
+  updateStats();
 
-// ══════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════
-function escHtml(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+  // Close modals on backdrop click
+  ['post-modal','view-modal'].forEach(id => {
+    document.getElementById(id).addEventListener('click', function(e) {
+      if (e.target === this) this.classList.remove('show');
+    });
+  });
 
-function updateStatCounts() {
-  const posts = getPosts();
-  document.getElementById('stat-posts').textContent = posts.length;
-}
-updateStatCounts();
+  // ESC to close modals
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.querySelectorAll('.modal-bg.show').forEach(m => m.classList.remove('show'));
+  });
 
-// Close modal on backdrop click
-document.getElementById('blog-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeBlogModal();
+  log('Admin dashboard opened 🟢');
 });
-
-// Login logic integration — support dynamic password
-(function() {
-  const storedPass = localStorage.getItem('toolsathi-admin-pass');
-  if (!storedPass) localStorage.setItem('toolsathi-admin-pass', '1234');
-})();
 </script>
 </body>
 </html>
