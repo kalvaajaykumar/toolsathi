@@ -1,30 +1,50 @@
 // Global Features
 
+const SUN_SVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="sun-icon" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #FCD34D;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const MOON_SVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #7C3AED;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+
 document.addEventListener('DOMContentLoaded', () => {
   // Theme Toggle
-  const themeToggleParam = document.getElementById('theme-toggle');
-  const currentTheme = localStorage.getItem('theme');
-  
-  if (currentTheme) {
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    if(themeToggleParam) {
-      themeToggleParam.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+  const themeToggleBtn = document.getElementById('theme-toggle');
+  const storedTheme = localStorage.getItem('toolsathi-theme');
+  // Default is dark mode
+  let isDark = storedTheme !== 'light';
+
+  function applyTheme(dark) {
+    if (dark) {
+      document.documentElement.removeAttribute('data-theme'); // body selector handles dark
+      document.documentElement.classList.remove('light-mode');
+      if (themeToggleBtn) themeToggleBtn.innerHTML = SUN_SVG;
+    } else {
+      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.classList.add('light-mode');
+      if (themeToggleBtn) themeToggleBtn.innerHTML = MOON_SVG;
     }
   }
 
-  if (themeToggleParam) {
-    themeToggleParam.addEventListener('click', () => {
-      let theme = document.documentElement.getAttribute('data-theme');
-      if (theme === 'dark') {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'light');
-        themeToggleParam.textContent = '🌙';
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-        themeToggleParam.textContent = '☀️';
-      }
+  // Apply stored/default theme on load
+  applyTheme(isDark);
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      isDark = !isDark;
+      applyTheme(isDark);
+      localStorage.setItem('toolsathi-theme', isDark ? 'dark' : 'light');
     });
+  }
+
+  // Scroll effect on glass-nav header
+  const header = document.querySelector('header.glass-nav');
+  if (header) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 20) {
+        header.style.background = 'rgba(8,11,20,0.85)';
+        header.style.borderBottom = '1px solid var(--border-subtle)';
+      } else {
+        header.style.background = 'var(--nav-bg)';
+        header.style.borderBottom = '1px solid var(--card-border)';
+      }
+    }, { passive: true });
   }
 
   // Mobile Navigation
