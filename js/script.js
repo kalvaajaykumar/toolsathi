@@ -29,11 +29,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Mobile Navigation
   const hamburger = document.getElementById('hamburger');
-  const navLinks = document.getElementById('nav-links');
+  const mobileMenu = document.getElementById('mobile-menu');
   
-  if (hamburger && navLinks) {
+  if (hamburger && mobileMenu) {
     hamburger.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
+      const isOpen = mobileMenu.style.display === 'flex';
+      
+      if (isOpen) {
+        mobileMenu.style.display = 'none';
+        
+        // Reset hamburger lines
+        const lines = hamburger.querySelectorAll('.hamburger-line');
+        if(lines.length === 3){
+             lines[0].style.transform = 'none';
+             lines[1].style.opacity = '1';
+             lines[2].style.transform = 'none';
+        }
+      } else {
+        mobileMenu.style.display = 'flex';
+        
+        // Animate hamburger lines matching React layout props
+        const lines = hamburger.querySelectorAll('.hamburger-line');
+        if(lines.length === 3){
+             lines[0].style.transform = 'translateY(7px) rotate(45deg)';
+             lines[1].style.opacity = '0';
+             lines[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+        }
+      }
     });
   }
 
