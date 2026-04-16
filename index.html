@@ -77,90 +77,151 @@
 
   <main class="relative" style="background: var(--bg-primary); min-height: 100vh;">
     <!-- HeroSection -->
-    <section class="relative min-h-screen flex flex-col justify-center overflow-hidden pt-16">
-      <!-- Ambient orbs -->
-      <div class="ambient-orb orb-animate" style="position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%); top: -10%; right: -5%;"></div>
-      <div class="ambient-orb orb-animate-reverse" style="position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%); bottom: 5%; left: -8%;"></div>
-      <div class="ambient-orb" style="position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%); top: 40%; left: 50%; transform: translateX(-50%); animation: orb-float 18s ease-in-out infinite;"></div>
-      
-      <div class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 flex flex-col items-center text-center">
-        <!-- Badge -->
-        <div class="badge badge-violet reveal-hidden mb-6">
-          <span class="w-1.5 h-1.5 rounded-full pulse-dot" style="background: #A78BFA; display: inline-block;"></span>
-          Built by a student, for students
+    <section style="position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; padding-top: 4rem;">
+
+      <!-- Ambient background orbs -->
+      <div class="ambient-orb orb-animate" style="width: 700px; height: 700px; background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 65%); top: -15%; right: -10%;"></div>
+      <div class="ambient-orb orb-animate-reverse" style="width: 500px; height: 500px; background: radial-gradient(circle, rgba(245,158,11,0.1) 0%, transparent 65%); bottom: -5%; left: -5%;"></div>
+      <div class="ambient-orb" style="width: 350px; height: 350px; background: radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%); top: 30%; left: 40%; animation: orb-float 20s ease-in-out infinite;"></div>
+
+      <!-- Grid line decorations -->
+      <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none;"></div>
+
+      <div style="max-width: 72rem; margin: 0 auto; padding: 3rem 1.5rem; width: 100%; position: relative; z-index: 10;">
+
+        <!-- Top badge -->
+        <div class="reveal-hidden" style="margin-bottom: 2rem;">
+          <span class="badge badge-violet">
+            <span class="pulse-dot" style="background: #A78BFA;"></span>
+            Built by a student, for students
+          </span>
         </div>
 
-        <!-- Hero headline -->
-        <h1 class="hero-title font-display font-semibold reveal-hidden delay-1 mb-6 text-4xl sm:text-5xl md:text-6xl leading-tight">
-          <span style="color: var(--text-primary);">All-in-One</span><br>
-          <span class="gradient-text-mixed italic">Free Tools</span><br>
-          <span style="color: var(--text-primary);">for Students</span>
-        </h1>
+        <!-- Split layout: Left text | Right tool grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
 
-        <!-- Sub -->
-        <p class="text-lg sm:text-xl font-light leading-relaxed max-w-2xl reveal-hidden delay-2 mb-10" style="color: var(--text-secondary);">
-          CGPA calculator, EMI calculator, BMI tracker, AI tools — everything you need as a student, completely free, no sign-up required.
-        </p>
+          <!-- LEFT: Typography block -->
+          <div>
+            <!-- Big headline -->
+            <h1 class="reveal-hidden delay-1" style="font-family: 'Fraunces', serif; font-weight: 700; line-height: 1.05; margin: 0 0 1.5rem 0; letter-spacing: -0.03em;">
+              <span style="display: block; font-size: clamp(3rem, 6vw, 5.5rem); color: var(--text-primary);">All-in-One</span>
+              <span style="display: block; font-size: clamp(3.5rem, 7vw, 6.5rem); font-style: italic; background: linear-gradient(135deg, #A78BFA 0%, #F59E0B 80%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Free Tools</span>
+              <span style="display: block; font-size: clamp(2.5rem, 5vw, 4.5rem); color: var(--text-secondary); font-weight: 600;">for Students</span>
+            </h1>
 
-        <!-- CTA buttons -->
-        <div class="flex flex-col sm:flex-row gap-3 reveal-hidden delay-3 mb-16">
-          <a href="tools/cgpa-calculator.html" class="btn-primary text-center min-w-[160px]" style="min-width: 160px;">Try CGPA Calculator</a>
-          <a href="ai-tools.html" class="btn-secondary text-center min-w-[160px]" style="min-width: 160px;">Explore AI Tools</a>
-        </div>
+            <!-- Accent line -->
+            <div class="reveal-hidden delay-2" style="width: 4rem; height: 3px; background: linear-gradient(90deg, #7C3AED, #F59E0B); border-radius: 2px; margin-bottom: 1.5rem;"></div>
 
-        <!-- Stats -->
-        <div class="flex flex-wrap justify-center gap-8 reveal-hidden delay-4 mb-16" style="display: flex; gap: 2rem;">
-          <div class="text-center">
-            <div class="font-display text-3xl font-semibold gradient-text-violet">6+</div>
-            <div class="text-sm font-medium mt-1" style="color: var(--text-muted);">Free Tools</div>
+            <!-- Subtext -->
+            <p class="reveal-hidden delay-2" style="font-size: clamp(1rem, 1.8vw, 1.125rem); line-height: 1.75; color: var(--text-secondary); font-weight: 300; margin: 0 0 2.5rem 0; max-width: 42ch;">
+              CGPA calculator, EMI calculator, BMI tracker, AI tools — everything you need as a student, completely free, no sign-up required.
+            </p>
+
+            <!-- CTA buttons -->
+            <div class="reveal-hidden delay-3" style="display: flex; gap: 0.875rem; flex-wrap: wrap; margin-bottom: 3rem;">
+              <a href="tools/cgpa-calculator.html" class="btn-primary" style="gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                Try CGPA Calculator
+              </a>
+              <a href="ai-tools.html" class="btn-secondary" style="gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 8v4l3 3"/></svg>
+                Explore AI Tools
+              </a>
+            </div>
+
+            <!-- Stats row -->
+            <div class="reveal-hidden delay-4" style="display: flex; gap: 2.5rem; flex-wrap: wrap;">
+              <div>
+                <div style="font-family: 'Fraunces', serif; font-size: 2.25rem; font-weight: 700; line-height: 1; background: linear-gradient(135deg, #A78BFA, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">6+</div>
+                <div style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted); margin-top: 0.25rem; letter-spacing: 0.05em; text-transform: uppercase;">Free Tools</div>
+              </div>
+              <div style="width: 1px; background: var(--border-subtle);"></div>
+              <div>
+                <div style="font-family: 'Fraunces', serif; font-size: 2.25rem; font-weight: 700; line-height: 1; background: linear-gradient(135deg, #A78BFA, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">2</div>
+                <div style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted); margin-top: 0.25rem; letter-spacing: 0.05em; text-transform: uppercase;">AI Generators</div>
+              </div>
+              <div style="width: 1px; background: var(--border-subtle);"></div>
+              <div>
+                <div style="font-family: 'Fraunces', serif; font-size: 2.25rem; font-weight: 700; line-height: 1; background: linear-gradient(135deg, #A78BFA, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">100%</div>
+                <div style="font-size: 0.75rem; font-weight: 500; color: var(--text-muted); margin-top: 0.25rem; letter-spacing: 0.05em; text-transform: uppercase;">Free Forever</div>
+              </div>
+            </div>
           </div>
-          <div class="text-center">
-            <div class="font-display text-3xl font-semibold gradient-text-violet">2</div>
-            <div class="text-sm font-medium mt-1" style="color: var(--text-muted);">AI Generators</div>
-          </div>
-          <div class="text-center">
-            <div class="font-display text-3xl font-semibold gradient-text-violet">100%</div>
-            <div class="text-sm font-medium mt-1" style="color: var(--text-muted);">Free Forever</div>
-          </div>
-        </div>
 
-        <!-- Floating tool cards -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 w-full max-w-2xl reveal-hidden delay-5" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem;">
-          <a href="tools/cgpa-calculator.html" class="glass-card shine-sweep group rounded-xl p-4 flex items-center gap-3 transition-transform duration-300 hover:-translate-y-1" style="text-decoration: none;">
-            <span class="text-xl">🎓</span>
-            <span class="text-sm font-semibold" style="color: var(--text-secondary);">CGPA Calc</span>
-          </a>
-          <a href="tools/emi-calculator.html" class="glass-card shine-sweep group rounded-xl p-4 flex items-center gap-3 transition-transform duration-300 hover:-translate-y-1" style="text-decoration: none;">
-            <span class="text-xl">💰</span>
-            <span class="text-sm font-semibold" style="color: var(--text-secondary);">EMI Calc</span>
-          </a>
-          <a href="ai-tools.html" class="glass-card shine-sweep group rounded-xl p-4 flex items-center gap-3 transition-transform duration-300 hover:-translate-y-1" style="text-decoration: none;">
-            <span class="text-xl">⚡</span>
-            <span class="text-sm font-semibold" style="color: var(--text-secondary);">AI Tools</span>
-          </a>
-          <a href="tools/percentage-calculator.html" class="glass-card shine-sweep group rounded-xl p-4 flex items-center gap-3 transition-transform duration-300 hover:-translate-y-1" style="text-decoration: none;">
-            <span class="text-xl">📊</span>
-            <span class="text-sm font-semibold" style="color: var(--text-secondary);">Percentage</span>
-          </a>
-          <a href="tools/bmi-calculator.html" class="glass-card shine-sweep group rounded-xl p-4 flex items-center gap-3 transition-transform duration-300 hover:-translate-y-1" style="text-decoration: none;">
-            <span class="text-xl">⚖️</span>
-            <span class="text-sm font-semibold" style="color: var(--text-secondary);">BMI Calc</span>
-          </a>
-          <a href="tools/discount-calculator.html" class="glass-card shine-sweep group rounded-xl p-4 flex items-center gap-3 transition-transform duration-300 hover:-translate-y-1" style="text-decoration: none;">
-            <span class="text-xl">🏷️</span>
-            <span class="text-sm font-semibold" style="color: var(--text-secondary);">Discount</span>
-          </a>
+          <!-- RIGHT: Tool cards grid -->
+          <div class="reveal-hidden delay-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.875rem;">
+            <a href="tools/cgpa-calculator.html" class="glass-card shine-sweep" style="border-radius: 1.25rem; padding: 1.5rem 1.25rem; text-decoration: none; display: flex; flex-direction: column; gap: 0.75rem; background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(124,58,237,0.03));" onmouseover="this.style.transform='translateY(-6px)'" onmouseout="this.style.transform='translateY(0)'">
+              <span style="font-size: 2rem; line-height: 1;">🎓</span>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">CGPA Calc</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">10-point scale</div>
+              </div>
+            </a>
+            <a href="tools/emi-calculator.html" class="glass-card shine-sweep" style="border-radius: 1.25rem; padding: 1.5rem 1.25rem; text-decoration: none; display: flex; flex-direction: column; gap: 0.75rem; background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.03)); margin-top: 1.5rem;" onmouseover="this.style.transform='translateY(-6px)'" onmouseout="this.style.transform='translateY(0)'">
+              <span style="font-size: 2rem; line-height: 1;">💰</span>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">EMI Calc</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Loan formula</div>
+              </div>
+            </a>
+            <a href="ai-tools.html" class="glass-card shine-sweep" style="border-radius: 1.25rem; padding: 1.5rem 1.25rem; text-decoration: none; display: flex; flex-direction: column; gap: 0.75rem; background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.03));" onmouseover="this.style.transform='translateY(-6px)'" onmouseout="this.style.transform='translateY(0)'">
+              <span style="font-size: 2rem; line-height: 1;">⚡</span>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">AI Tools</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Prompt gen</div>
+              </div>
+            </a>
+            <a href="tools/percentage-calculator.html" class="glass-card shine-sweep" style="border-radius: 1.25rem; padding: 1.5rem 1.25rem; text-decoration: none; display: flex; flex-direction: column; gap: 0.75rem; background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(124,58,237,0.02)); margin-top: 1.5rem;" onmouseover="this.style.transform='translateY(-6px)'" onmouseout="this.style.transform='translateY(0)'">
+              <span style="font-size: 2rem; line-height: 1;">📊</span>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">Percentage</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Quick math</div>
+              </div>
+            </a>
+            <a href="tools/bmi-calculator.html" class="glass-card shine-sweep" style="border-radius: 1.25rem; padding: 1.5rem 1.25rem; text-decoration: none; display: flex; flex-direction: column; gap: 0.75rem; background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.02));" onmouseover="this.style.transform='translateY(-6px)'" onmouseout="this.style.transform='translateY(0)'">
+              <span style="font-size: 2rem; line-height: 1;">⚖️</span>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">BMI Calc</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">WHO standard</div>
+              </div>
+            </a>
+            <a href="tools/discount-calculator.html" class="glass-card shine-sweep" style="border-radius: 1.25rem; padding: 1.5rem 1.25rem; text-decoration: none; display: flex; flex-direction: column; gap: 0.75rem; background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(245,158,11,0.02)); margin-top: 1.5rem;" onmouseover="this.style.transform='translateY(-6px)'" onmouseout="this.style.transform='translateY(0)'">
+              <span style="font-size: 2rem; line-height: 1;">🏷️</span>
+              <div>
+                <div style="font-size: 0.875rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.25rem;">Discount</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Save more</div>
+              </div>
+            </a>
+          </div>
         </div>
 
         <!-- Scroll indicator -->
-        <div class="flex flex-col items-center gap-2 mt-12 reveal-hidden delay-6">
-          <span class="text-xs font-medium tracking-widest uppercase" style="color: var(--text-muted);">Scroll</span>
-          <div class="relative overflow-hidden rounded-full" style="width: 1px; height: 2.5rem; background: var(--border-subtle);">
-            <div class="absolute top-0 left-0 w-full rounded-full" style="height: 40%; background: var(--accent-violet); animation: scroll-line 1.5s ease-in-out infinite;"></div>
+        <div class="reveal-hidden delay-6" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; margin-top: 4rem;">
+          <span style="font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted);">Scroll</span>
+          <div style="position: relative; width: 1px; height: 40px; background: var(--border-subtle); border-radius: 99px; overflow: hidden;">
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 40%; background: var(--accent-violet); border-radius: 99px; animation: scroll-line 1.5s ease-in-out infinite;"></div>
           </div>
         </div>
+
       </div>
+
+      <!-- Mobile hero layout (stacked) -->
+      <style>
+        @media (max-width: 768px) {
+          .hero-grid { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+          .hero-tools-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 0.625rem !important; }
+          .hero-tools-grid a { margin-top: 0 !important; }
+        }
+        @keyframes scroll-line {
+          0% { transform: translateY(-100%); }
+          100% { transform: translateY(300%); }
+        }
+      </style>
+
     </section>
+
+
+
 
     <!-- ToolsShowcase -->
     <section class="section-gap relative z-10" id="tools" style="padding: 6rem 0;">
