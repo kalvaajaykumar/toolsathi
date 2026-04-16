@@ -650,6 +650,21 @@
   </div>
 </div>
 
+<!-- ════════ CONFIRM MODAL ════════ -->
+<div class="modal-bg" id="confirm-modal">
+  <div class="modal" style="max-width:360px;">
+    <div style="text-align:center; padding:0.5rem 0 1.25rem;">
+      <div style="font-size:2.25rem; margin-bottom:0.875rem; line-height:1;">⚠️</div>
+      <h2 id="confirm-msg" style="font-size:1rem; font-weight:600; color:var(--t1); margin-bottom:0.375rem; font-family:'Fraunces',serif;"></h2>
+      <p style="font-size:0.78rem; color:var(--t3);">This action cannot be undone.</p>
+    </div>
+    <div class="flex gap-2" style="justify-content:flex-end; margin-top:0.5rem;">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirm-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ═══════════════════════════════════════════════
 //  THEME — standalone (does NOT use script.js)
@@ -675,12 +690,34 @@
 })();
 
 // ═══════════════════════════════════════════════
+//  CUSTOM CONFIRM (replaces window.confirm)
+// ═══════════════════════════════════════════════
+let _confirmCb = null;
+function askConfirm(msg, okLabel, cb) {
+  document.getElementById('confirm-msg').textContent = msg;
+  document.getElementById('confirm-ok').textContent = okLabel || 'Yes, Delete';
+  _confirmCb = cb;
+  document.getElementById('confirm-modal').classList.add('show');
+}
+function closeConfirm() {
+  document.getElementById('confirm-modal').classList.remove('show');
+  _confirmCb = null;
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('confirm-ok').addEventListener('click', () => {
+    closeConfirm();
+    if (typeof _confirmCb === 'function') _confirmCb();
+  });
+});
+
+// ═══════════════════════════════════════════════
 //  AUTH
 // ═══════════════════════════════════════════════
 function doLogout() {
-  if (!confirm('Log out of admin?')) return;
-  localStorage.removeItem('toolsathi-admin');
-  window.location.href = 'login.html';
+  askConfirm('Log out of admin panel?', 'Yes, Logout', () => {
+    localStorage.removeItem('toolsathi-admin');
+    window.location.href = 'login.html';
+  });
 }
 
 // ═══════════════════════════════════════════════
@@ -932,18 +969,20 @@ function toggleStatus(id) {
 }
 
 function delPost(id) {
-  if (!confirm('Delete this post permanently?')) return;
-  const posts = getPosts().filter(p => p.id !== id);
-  savePosts(posts);
-  renderBlog();
-  log('Post deleted 🗑️');
+  askConfirm('Delete this post permanently?', 'Yes, Delete', () => {
+    const posts = getPosts().filter(p => p.id !== id);
+    savePosts(posts);
+    renderBlog();
+    log('Post deleted 🗑️');
+  });
 }
 
 function dangerClearBlog() {
-  if (!confirm('Delete ALL blog posts? This is permanent.')) return;
-  savePosts([]);
-  renderBlog();
-  log('All blog posts deleted 💣');
+  askConfirm('Delete ALL blog posts? This is permanent.', 'Yes, Delete All', () => {
+    savePosts([]);
+    renderBlog();
+    log('All blog posts deleted 💣');
+  });
 }
 
 // ═══════════════════════════════════════════════
@@ -1006,18 +1045,21 @@ function renderAnalytics() {
 }
 
 function resetAnalytics() {
-  if (!confirm('Reset ALL analytics data?')) return;
-  localStorage.removeItem('ts-analytics');
-  renderAnalytics();
-  updateStats();
-  log('Analytics reset 🔄');
+  askConfirm('Reset ALL analytics data?', 'Yes, Reset', () => {
+    localStorage.removeItem('ts-analytics');
+    renderAnalytics();
+    updateStats();
+    log('Analytics reset 🔄');
+  });
 }
+
 function dangerClearAnalytics() {
-  if (!confirm('Clear all analytics?')) return;
-  localStorage.removeItem('ts-analytics');
-  renderAnalytics();
-  updateStats();
-  log('Analytics cleared 🗑️');
+  askConfirm('Clear all analytics data?', 'Yes, Clear', () => {
+    localStorage.removeItem('ts-analytics');
+    renderAnalytics();
+    updateStats();
+    log('Analytics cleared 🗑️');
+  });
 }
 
 // ═══════════════════════════════════════════════
@@ -1052,10 +1094,11 @@ function saveConfig() {
 }
 
 function dangerClearAll() {
-  if (!confirm('FACTORY RESET — delete ALL admin data (posts, analytics, settings, activity)? This cannot be undone!')) return;
-  ['ts-posts','ts-analytics','ts-config','ts-activity','ts-tools'].forEach(k => localStorage.removeItem(k));
-  renderBlog(); renderAnalytics(); loadConfig(); renderTools(); renderActivity(); updateStats();
-  log('Factory reset complete 💣');
+  askConfirm('FACTORY RESET — delete ALL admin data (posts, analytics, settings, activity)?', '💣 Yes, Reset Everything', () => {
+    ['ts-posts','ts-analytics','ts-config','ts-activity','ts-tools'].forEach(k => localStorage.removeItem(k));
+    renderBlog(); renderAnalytics(); loadConfig(); renderTools(); renderActivity(); updateStats();
+    log('Factory reset complete 💣');
+  });
 }
 
 // ═══════════════════════════════════════════════
@@ -1089,7 +1132,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateStats();
 
   // Close modals on backdrop click
-  ['post-modal','view-modal'].forEach(id => {
+  ['post-modal','view-modal','confirm-modal'].forEach(id => {
     document.getElementById(id).addEventListener('click', function(e) {
       if (e.target === this) this.classList.remove('show');
     });
