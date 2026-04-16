@@ -12,12 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function applyTheme(dark) {
     if (dark) {
-      document.documentElement.removeAttribute('data-theme'); // body selector handles dark
+      document.documentElement.setAttribute('data-theme', 'dark');
       document.documentElement.classList.remove('light-mode');
+      document.body.style.background = '';
       if (themeToggleBtn) themeToggleBtn.innerHTML = SUN_SVG;
     } else {
       document.documentElement.setAttribute('data-theme', 'light');
       document.documentElement.classList.add('light-mode');
+      document.body.style.background = '';
       if (themeToggleBtn) themeToggleBtn.innerHTML = MOON_SVG;
     }
   }
