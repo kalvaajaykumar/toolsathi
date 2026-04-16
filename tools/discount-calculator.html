@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Discount Calculator — Final Price After Discount | Toolsathi</title>
+  <meta name="description" content="Calculate the final price after applying a percentage discount. Free online discount calculator.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+  <header class="glass-nav">
+    <div class="header-container flex-between">
+      <a href="../index.html" class="logo group">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-violet);"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <span class="font-display font-semibold text-lg" style="color: var(--text-primary);">Toolsathi</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="nav-links" id="nav-links">
+        <a href="../index.html" class="nav-item">Home</a>
+        <div class="dropdown-wrapper">
+          <a href="../index.html#tools" class="nav-item flex-center gap-1 dropdown-toggle">
+            Tools
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6" /></svg>
+          </a>
+          <div class="dropdown-content glass-card">
+            <a href="../tools/age-calculator.html">🎂 Age Calculator</a>
+            <a href="../tools/cgpa-calculator.html">🎓 CGPA Calculator</a>
+            <a href="../tools/emi-calculator.html">💰 EMI Calculator</a>
+            <a href="../tools/percentage-calculator.html">📊 Percentage Calc</a>
+            <a href="../tools/bmi-calculator.html">⚖️ BMI Calculator</a>
+            <a href="../tools/discount-calculator.html">🏷️ Discount Calc</a>
+          </div>
+        </div>
+        <a href="../ai-tools.html" class="nav-item">AI Tools</a>
+        <a href="../blog.html" class="nav-item">Blog</a>
+        <a href="../about.html" class="nav-item">About</a>
+      </nav>
+
+      <!-- Right side -->
+      <div class="flex-center gap-3">
+        <button class="theme-toggle flex-center" id="theme-toggle" aria-label="Toggle dark mode">
+          <!-- Toggle icon swapped dynamically by JS, default moon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #FCD34D;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button class="hamburger" id="hamburger">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative z-10" style="background: var(--bg-primary); min-height: 100vh;">
+    <!-- Ambient -->
+    <div style="position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;">
+      <div class="ambient-orb orb-animate" style="position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%); top: -5%; right: -5%;"></div>
+    </div>
+
+    <div style="max-width: 42rem; margin: 0 auto; padding: 7rem 1.5rem 5rem; position: relative; z-index: 10;">
+      
+      <div style="text-align: center; margin-bottom: 2.5rem;">
+        <div class="badge badge-gold" style="display: inline-flex; margin-bottom: 1rem;">
+          <span style="margin-right: 0.375rem;">🏷️</span> Discount Calculator
+        </div>
+        <h1 class="font-display font-semibold" style="font-size: clamp(2.25rem, 6vw, 3rem); margin-bottom: 0.75rem; color: var(--text-primary);">
+          Discount <span class="gradient-text-gold" style="font-style: italic;">Calculator</span>
+        </h1>
+        <p style="font-size: 1rem; font-weight: 300; color: var(--text-secondary);">
+          Find the final price after applying any percentage discount instantly.
+        </p>
+      </div>
+
+      <div class="glass-card" style="border-radius: 1rem; padding: 2rem; margin-bottom: 1.5rem;">
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.25rem;">
+          <div>
+            <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-secondary);">Original Price (₹)</label>
+            <input type="number" id="dc-original" class="tool-input" placeholder="e.g. 1999" min="0" style="width: 100%; outline: none;" oninput="updateDC()">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-secondary);">Discount (%)</label>
+            <input type="number" id="dc-discount" class="tool-input" placeholder="e.g. 30" min="0" max="100" style="width: 100%; outline: none;" oninput="updateDC()">
+          </div>
+        </div>
+
+        <!-- Quick discount buttons -->
+        <div style="margin-bottom: 1.25rem;">
+          <p style="font-size: 0.75rem; margin-bottom: 0.5rem; color: var(--text-muted);">Quick select:</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;" id="dc-quick">
+            <button onclick="setDiscount(10)" class="btn-secondary" style="padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" data-val="10">10% OFF</button>
+            <button onclick="setDiscount(20)" class="btn-secondary" style="padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" data-val="20">20% OFF</button>
+            <button onclick="setDiscount(25)" class="btn-secondary" style="padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" data-val="25">25% OFF</button>
+            <button onclick="setDiscount(30)" class="btn-secondary" style="padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" data-val="30">30% OFF</button>
+            <button onclick="setDiscount(50)" class="btn-secondary" style="padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" data-val="50">50% OFF</button>
+            <button onclick="setDiscount(70)" class="btn-secondary" style="padding: 0.375rem 0.75rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" data-val="70">70% OFF</button>
+          </div>
+        </div>
+
+        <div id="dc-error" style="display: none; margin-bottom: 1rem; padding: 0.75rem; border-radius: 0.75rem; font-size: 0.875rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #F87171;">⚠️ Please enter a valid price and discount between 0–100%.</div>
+        <button onclick="calculateDiscount()" class="btn-primary" style="width: 100%; border-radius: 0.5rem; padding: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.3s;">Calculate Discount 🏷️</button>
+      </div>
+
+      <div id="dc-result" class="glass-card" style="display: none; border-radius: 1rem; padding: 2rem;">
+        <h2 class="font-display font-semibold" style="font-size: 1.25rem; margin-bottom: 1.5rem; text-align: center; color: var(--text-primary);">Price Breakdown</h2>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-radius: 0.75rem; background: var(--bg-card); border: 1px solid rgba(52,211,153,0.3);">
+            <span style="font-size: 0.875rem; color: var(--text-secondary);">Final Price</span>
+            <span id="res-final" class="font-display font-semibold" style="font-size: 1.5rem; color: #34D399;">₹0</span>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-radius: 0.75rem; background: var(--bg-card); border: 1px solid var(--border-subtle);">
+            <span style="font-size: 0.875rem; color: var(--text-secondary);">You Save</span>
+            <span id="res-save" class="font-display font-semibold" style="font-size: 1rem; color: #FCD34D;">₹0</span>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-radius: 0.75rem; background: var(--bg-card); border: 1px solid var(--border-subtle);">
+            <span style="font-size: 0.875rem; color: var(--text-secondary);">Original Price</span>
+            <span id="res-orig" class="font-display font-semibold" style="font-size: 1rem; color: var(--text-muted);">₹0</span>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-radius: 0.75rem; background: var(--bg-card); border: 1px solid var(--border-subtle);">
+            <span style="font-size: 0.875rem; color: var(--text-secondary);">Discount Applied</span>
+            <span id="res-disc" class="font-display font-semibold" style="font-size: 1rem; color: #F87171;">0%</span>
+          </div>
+
+        </div>
+      </div>
+      
+    </div>
+  </main>
+
+    <footer class="site-footer" style="border-top: 1px solid var(--border-subtle); margin-top: 4rem;">
+    <div class="footer-container" style="max-width: 1200px; margin: 0 auto; padding: 3rem 5%; position: relative; z-index: 10;">
+      <div class="footer-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+        
+        <div class="footer-col">
+          <div class="flex-center gap-2 mb-3" style="justify-content: flex-start; margin-bottom: 0.75rem;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-violet);"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span class="font-display font-semibold text-sm" style="color: var(--text-primary); font-size: 0.875rem; font-weight: 600;">Toolsathi</span>
+          </div>
+          <p class="text-xs" style="color: var(--text-muted); font-size: 0.75rem; line-height: 1.6;">Free tools for students. Built by Kalva Ajay Kumar — CSE student & YouTuber.</p>
+        </div>
+
+        <div class="footer-col">
+          <p class="text-xs uppercase tracking-widest" style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 0.75rem; text-transform: uppercase;">Pages</p>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="../index.html" style="color: var(--text-muted); font-size: 0.875rem;">Home</a>
+            <a href="../ai-tools.html" style="color: var(--text-muted); font-size: 0.875rem;">AI Tools</a>
+            <a href="../blog.html" style="color: var(--text-muted); font-size: 0.875rem;">Blog</a>
+            <a href="../about.html" style="color: var(--text-muted); font-size: 0.875rem;">About</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <p class="text-xs uppercase tracking-widest" style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 0.75rem; text-transform: uppercase;">Tools</p>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="../tools/age-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">Age Calculator</a>
+            <a href="../tools/cgpa-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">CGPA Calculator</a>
+            <a href="../tools/emi-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">EMI Calculator</a>
+            <a href="../tools/percentage-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">Percentage Calc</a>
+            <a href="../tools/bmi-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">BMI Calculator</a>
+            <a href="../tools/discount-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">Discount Calc</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <p class="text-xs uppercase tracking-widest" style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 0.75rem; text-transform: uppercase;">Creator</p>
+          <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+            <p style="color: var(--text-secondary); font-size: 0.875rem; font-weight: 600;">Kalva Ajay Kumar</p>
+            <p style="color: var(--text-muted); font-size: 0.75rem;">CSE Student · YouTuber</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="flex-between" style="border-top: 1px solid var(--border-subtle); padding-top: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <p style="color: var(--text-muted); font-size: 0.75rem;">© 2026 Toolsathi — All rights reserved</p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="../login.html" style="color: var(--text-muted); font-size: 0.75rem;">Admin</a>
+          <a href="../about.html" style="color: var(--text-muted); font-size: 0.75rem;">About</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/script.js"></script>
+  <script>
+    function fmt(n) {
+      return '₹' + n.toLocaleString('en-IN', { maximumFractionDigits: 2 });
+    }
+
+    function setDiscount(val) {
+      document.getElementById('dc-discount').value = val;
+      updateDC();
+    }
+
+    function updateDC() {
+      // Highlight quick buttons
+      const currentD = document.getElementById('dc-discount').value;
+      const btns = document.querySelectorAll('#dc-quick button');
+      btns.forEach(b => {
+        if (b.dataset.val === currentD) {
+          b.className = '';
+          b.style.background = '#f59e0b';
+          b.style.color = '#fff';
+          b.style.border = 'none';
+        } else {
+          b.className = 'btn-secondary';
+          b.style.background = '';
+          b.style.color = '';
+        }
+      });
+      document.getElementById('dc-error').style.display = 'none';
+    }
+
+    function calculateDiscount() {
+      const pStr = document.getElementById('dc-original').value;
+      const dStr = document.getElementById('dc-discount').value;
+      const errorBox = document.getElementById('dc-error');
+      const resultBox = document.getElementById('dc-result');
+
+      const price = parseFloat(pStr);
+      const disc = parseFloat(dStr);
+
+      if (!pStr || !dStr || isNaN(price) || isNaN(disc) || price <= 0 || disc < 0 || disc > 100) {
+        errorBox.style.display = 'block';
+        resultBox.style.display = 'none';
+        return;
+      }
+
+      errorBox.style.display = 'none';
+      const discountAmount = (price * disc) / 100;
+      const finalPrice = price - discountAmount;
+
+      document.getElementById('res-final').textContent = fmt(finalPrice);
+      document.getElementById('res-save').textContent = fmt(discountAmount);
+      document.getElementById('res-orig').textContent = fmt(price);
+      document.getElementById('res-disc').textContent = disc + '%';
+
+      resultBox.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

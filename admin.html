@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Toolsathi</title>
+  <meta name="description" content="Toolsathi admin dashboard.">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Admin specific overwrites */
+    .admin-section { display: none; }
+    .admin-section.active { display: block; animation: fadeIn 0.3s ease; }
+    .nav-btn.active { background: rgba(124, 58, 237, 0.15); color: #A78BFA !important; }
+    
+    .nav-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.05);
+    }
+  </style>
+</head>
+<body style="margin: 0; overflow-x: hidden;">
+
+  <div style="min-height: 100vh; display: flex; background: var(--bg-primary);">
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" style="position: sticky; top: 0; left: 0; height: 100vh; width: 16rem; display: flex; flex-direction: column; background: var(--bg-secondary); border-right: 1px solid var(--border-subtle); z-index: 30; flex-shrink: 0;">
+      <!-- Logo -->
+      <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-subtle);">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div class="flex-center font-display" style="width: 2.25rem; height: 2.25rem; border-radius: 0.75rem; font-size: 1.125rem; font-weight: 700; background: linear-gradient(135deg, #7C3AED, #F59E0B); color: white;">T</div>
+          <div>
+            <p class="font-display font-semibold" style="font-size: 0.875rem; color: var(--text-primary); margin:0; line-height: 1.2;">Toolsathi</p>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin:0;">Admin Panel</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav -->
+      <nav style="flex: 1; padding: 1rem; display: flex; flex-direction: column; gap: 0.25rem; overflow-y: auto;">
+        <button class="nav-btn active" data-target="overview" style="width: 100%; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; font-family: inherit; transition: all 0.2s; border: none; cursor: pointer; text-align: left; background: transparent; color: var(--text-secondary);">
+          <span style="font-size: 1rem;">📊</span> Overview
+        </button>
+        <button class="nav-btn" data-target="tools" style="width: 100%; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; font-family: inherit; transition: all 0.2s; border: none; cursor: pointer; text-align: left; background: transparent; color: var(--text-secondary);">
+          <span style="font-size: 1rem;">🛠️</span> Tools Management
+        </button>
+        <button class="nav-btn" data-target="blog" style="width: 100%; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; font-family: inherit; transition: all 0.2s; border: none; cursor: pointer; text-align: left; background: transparent; color: var(--text-secondary);">
+          <span style="font-size: 1rem;">📝</span> Blog Management
+        </button>
+        <button class="nav-btn" data-target="analytics" style="width: 100%; display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; font-family: inherit; transition: all 0.2s; border: none; cursor: pointer; text-align: left; background: transparent; color: var(--text-secondary);">
+          <span style="font-size: 1rem;">📈</span> Analytics
+        </button>
+      </nav>
+
+      <!-- Links -->
+      <div style="padding: 1rem; border-top: 1px solid var(--border-subtle); display: flex; flex-direction: column; gap: 0.25rem;">
+        <a href="index.html" class="nav-btn" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; transition: all 0.2s; color: var(--text-muted); text-decoration: none;">
+          🏠 View Website
+        </a>
+        <button onclick="window.location.href='login.html'" style="width: 100%; display: flex; align-items: center; justify-content: flex-start; gap: 0.75rem; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-family: inherit; transition: all 0.2s; border: none; cursor: pointer; text-align: left; background: transparent; color: #F87171;">
+          🚪 Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div style="flex: 1; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden;">
+      
+      <!-- Top bar -->
+      <header style="position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; height: 4rem; border-bottom: 1px solid var(--border-subtle); background: var(--bg-secondary);">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <button class="theme-toggle flex-center" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+          <h1 id="page-title" class="font-display font-semibold" style="font-size: 1.125rem; margin:0; color: var(--text-primary); text-transform: capitalize;">Overview</h1>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <span class="badge badge-green" style="font-size: 0.75rem;">● Live</span>
+          <div class="flex-center font-bold" style="width: 2rem; height: 2rem; border-radius: 9999px; font-size: 0.875rem; background: linear-gradient(135deg, #7C3AED, #F59E0B); color: white;">A</div>
+        </div>
+      </header>
+
+      <!-- Content -->
+      <main style="flex: 1; padding: 1.5rem; overflow-y: auto;">
+
+        <!-- OVERVIEW SECTION -->
+        <section id="overview" class="admin-section active">
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+              <div class="glass-card" style="border-radius: 1rem; padding: 1.25rem;">
+                <div style="font-size: 1.5rem; margin-bottom: 0.75rem;">📄</div>
+                <div class="font-display font-semibold" style="font-size: 1.875rem; margin-bottom: 0.25rem; color: #7C3AED;">12</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Total Pages</div>
+              </div>
+              <div class="glass-card" style="border-radius: 1rem; padding: 1.25rem;">
+                <div style="font-size: 1.5rem; margin-bottom: 0.75rem;">🛠️</div>
+                <div class="font-display font-semibold" style="font-size: 1.875rem; margin-bottom: 0.25rem; color: #10B981;">6</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Tools Live</div>
+              </div>
+              <div class="glass-card" style="border-radius: 1rem; padding: 1.25rem;">
+                <div style="font-size: 1.5rem; margin-bottom: 0.75rem;">📝</div>
+                <div class="font-display font-semibold" style="font-size: 1.875rem; margin-bottom: 0.25rem; color: #F59E0B;">3</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Blog Articles</div>
+              </div>
+              <div class="glass-card" style="border-radius: 1rem; padding: 1.25rem;">
+                <div style="font-size: 1.5rem; margin-bottom: 0.75rem;">🤖</div>
+                <div class="font-display font-semibold" style="font-size: 1.875rem; margin-bottom: 0.25rem; color: #3B82F6;">2</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">AI Tools</div>
+              </div>
+            </div>
+
+            <div class="glass-card" style="border-radius: 1rem; padding: 1.5rem;">
+              <h2 class="font-display font-semibold" style="font-size: 1.125rem; margin-bottom: 1rem; color: var(--text-primary);">Quick Links</h2>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem;">
+                <a href="index.html" class="flex-center gap-2" style="padding: 0.75rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-secondary);"><span style="flex-shrink:0;">🏠</span> Homepage</a>
+                <a href="ai-tools.html" class="flex-center gap-2" style="padding: 0.75rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-secondary);"><span style="flex-shrink:0;">🤖</span> AI Tools</a>
+                <a href="blog.html" class="flex-center gap-2" style="padding: 0.75rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-secondary);"><span style="flex-shrink:0;">📝</span> Blog</a>
+                <a href="about.html" class="flex-center gap-2" style="padding: 0.75rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-secondary);"><span style="flex-shrink:0;">👤</span> About</a>
+                <a href="tools/cgpa-calculator.html" class="flex-center gap-2" style="padding: 0.75rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-secondary);"><span style="flex-shrink:0;">🎓</span> CGPA Calc</a>
+                <a href="tools/emi-calculator.html" class="flex-center gap-2" style="padding: 0.75rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-secondary);"><span style="flex-shrink:0;">💰</span> EMI Calc</a>
+              </div>
+            </div>
+
+            <div class="glass-card" style="border-radius: 1rem; padding: 1.5rem;">
+              <h2 class="font-display font-semibold" style="font-size: 1.125rem; margin-bottom: 0.5rem; color: var(--text-primary);">Website Info</h2>
+              <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1rem;">
+                <div class="flex-between" style="padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle);">
+                  <span style="font-size: 0.875rem; color: var(--text-muted);">Website Name</span>
+                  <span style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary);">Toolsathi</span>
+                </div>
+                <div class="flex-between" style="padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle);">
+                  <span style="font-size: 0.875rem; color: var(--text-muted);">Creator</span>
+                  <span style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary);">Kalva Ajay Kumar</span>
+                </div>
+                <div class="flex-between" style="padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle);">
+                  <span style="font-size: 0.875rem; color: var(--text-muted);">Framework</span>
+                  <span style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary);">Static HTML/JS</span>
+                </div>
+                <div class="flex-between" style="padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle);">
+                  <span style="font-size: 0.875rem; color: var(--text-muted);">Status</span>
+                  <span style="font-size: 0.875rem; font-weight: 600; color: var(--text-primary);">✅ Live</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TOOLS SECTION -->
+        <section id="tools" class="admin-section">
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin:0;">Manage all calculator tools on the website.</p>
+            
+            <div class="glass-card flex-between" style="border-radius: 1rem; padding: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="font-size: 1.5rem;">🎂</span>
+                <div>
+                  <p class="font-semibold" style="font-size: 0.875rem; margin:0; color: var(--text-primary);">Age Calculator</p>
+                  <p style="font-size: 0.75rem; color: var(--text-muted); margin:0; margin-top: 0.125rem;">/age-calculator</p>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="badge badge-green text-xs">Live</span>
+                <a href="tools/age-calculator.html" class="btn-secondary" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; border-radius: 0.5rem;">View →</a>
+              </div>
+            </div>
+            
+            <div class="glass-card flex-between" style="border-radius: 1rem; padding: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="font-size: 1.5rem;">🎓</span>
+                <div>
+                  <p class="font-semibold" style="font-size: 0.875rem; margin:0; color: var(--text-primary);">CGPA Calculator</p>
+                  <p style="font-size: 0.75rem; color: var(--text-muted); margin:0; margin-top: 0.125rem;">/cgpa-calculator</p>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="badge badge-green text-xs">Live</span>
+                <a href="tools/cgpa-calculator.html" class="btn-secondary" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; border-radius: 0.5rem;">View →</a>
+              </div>
+            </div>
+
+            <div class="glass-card flex-between" style="border-radius: 1rem; padding: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="font-size: 1.5rem;">💰</span>
+                <div>
+                  <p class="font-semibold" style="font-size: 0.875rem; margin:0; color: var(--text-primary);">EMI Calculator</p>
+                  <p style="font-size: 0.75rem; color: var(--text-muted); margin:0; margin-top: 0.125rem;">/emi-calculator</p>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="badge badge-green text-xs">Live</span>
+                <a href="tools/emi-calculator.html" class="btn-secondary" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; border-radius: 0.5rem;">View →</a>
+              </div>
+            </div>
+            
+          </div>
+        </section>
+
+        <!-- BLOG SECTION -->
+        <section id="blog" class="admin-section">
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin:0;">Manage blog articles and content.</p>
+            
+            <div class="glass-card flex-between" style="border-radius: 1rem; padding: 1.25rem;">
+              <div>
+                <p class="font-semibold" style="font-size: 0.875rem; margin:0; color: var(--text-primary);">How to Manage Time Effectively</p>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin:0; margin-top: 0.125rem;">Published: Apr 15, 2026</p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="badge badge-green text-xs">Published</span>
+                <a href="blog.html" class="btn-secondary" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; border-radius: 0.5rem;">View →</a>
+              </div>
+            </div>
+
+            <div class="glass-card flex-between" style="border-radius: 1rem; padding: 1.25rem;">
+              <div>
+                <p class="font-semibold" style="font-size: 0.875rem; margin:0; color: var(--text-primary);">Importance of a Good Portfolio</p>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin:0; margin-top: 0.125rem;">Published: Apr 10, 2026</p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span class="badge badge-green text-xs">Published</span>
+                <a href="blog.html" class="btn-secondary" style="padding: 0.375rem 0.75rem; font-size: 0.75rem; border-radius: 0.5rem;">View →</a>
+              </div>
+            </div>
+
+            <div class="glass-card" style="border-radius: 1rem; padding: 1.25rem; border-style: dashed; border-color: var(--border-glow); text-align: center;">
+              <p style="font-size: 0.875rem; color: var(--text-muted); margin:0;">+ More articles coming soon</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ANALYTICS SECTION -->
+        <section id="analytics" class="admin-section">
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <p style="font-size: 0.875rem; color: var(--text-secondary); margin:0;">Analytics overview (placeholder — connect Google Analytics for real data).</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+              <div class="glass-card text-center" style="border-radius: 1rem; padding: 1.5rem;">
+                <div style="font-size: 1.875rem; margin-bottom: 0.5rem;">👁️</div>
+                <div class="font-display font-semibold" style="font-size: 1.5rem; margin-bottom: 0.25rem; color: var(--text-primary);">—</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Page Views (Est.)</div>
+              </div>
+              <div class="glass-card text-center" style="border-radius: 1rem; padding: 1.5rem;">
+                <div style="font-size: 1.875rem; margin-bottom: 0.5rem;">👤</div>
+                <div class="font-display font-semibold" style="font-size: 1.5rem; margin-bottom: 0.25rem; color: var(--text-primary);">—</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Unique Visitors</div>
+              </div>
+              <div class="glass-card text-center" style="border-radius: 1rem; padding: 1.5rem;">
+                <div style="font-size: 1.875rem; margin-bottom: 0.5rem;">⏱️</div>
+                <div class="font-display font-semibold" style="font-size: 1.5rem; margin-bottom: 0.25rem; color: var(--text-primary);">—</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Avg. Session</div>
+              </div>
+            </div>
+
+            <div class="glass-card" style="border-radius: 1rem; padding: 1.5rem;">
+              <h3 class="font-semibold" style="font-size: 1rem; margin-bottom: 0.75rem; color: var(--text-primary); margin:0;">Connect Analytics</h3>
+              <p style="font-size: 0.875rem; margin-bottom: 1rem; color: var(--text-secondary);">To see real analytics data, add your Google Analytics Measurement ID to the application framework.</p>
+              <div style="padding: 0.75rem; border-radius: 0.75rem; font-family: monospace; font-size: 0.875rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--accent-violet-light);">
+                NEXT_PUBLIC_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+  <script>
+    // Tab switching logic mimicking React "useState"
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const sections = document.querySelectorAll('.admin-section');
+    const pageTitle = document.getElementById('page-title');
+
+    navBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        if(!btn.hasAttribute('data-target')) return; // Ignore external links
+        
+        // Remove active class
+        navBtns.forEach(b => b.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+        
+        // Set new active class
+        btn.classList.add('active');
+        const targetId = btn.getAttribute('data-target');
+        const section = document.getElementById(targetId);
+        if(section) section.classList.add('active');
+
+        // Update Header
+        pageTitle.innerText = btn.innerText.replace(/[^\x00-\x7F]/g, "").trim(); // Strip emoji for cleaner header
+      });
+    });
+  </script>
+</body>
+</html>

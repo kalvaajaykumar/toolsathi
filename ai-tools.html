@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Tools — YouTube Title & Resume Generator | Toolsathi</title>
+  <meta name="description" content="Free AI prompt tools for students. Generate YouTube titles and resume summaries with ready-to-use prompts. Copy and use with any AI chatbot.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+  <header class="glass-nav">
+    <div class="header-container flex-between">
+      <a href="index.html" class="logo group">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-violet);"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <span class="font-display font-semibold text-lg" style="color: var(--text-primary);">Toolsathi</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="nav-links" id="nav-links">
+        <a href="index.html" class="nav-item">Home</a>
+        <div class="dropdown-wrapper">
+          <a href="index.html#tools" class="nav-item flex-center gap-1 dropdown-toggle">
+            Tools
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6" /></svg>
+          </a>
+          <div class="dropdown-content glass-card">
+            <a href="tools/age-calculator.html">🎂 Age Calculator</a>
+            <a href="tools/cgpa-calculator.html">🎓 CGPA Calculator</a>
+            <a href="tools/emi-calculator.html">💰 EMI Calculator</a>
+            <a href="tools/percentage-calculator.html">📊 Percentage Calc</a>
+            <a href="tools/bmi-calculator.html">⚖️ BMI Calculator</a>
+            <a href="tools/discount-calculator.html">🏷️ Discount Calc</a>
+          </div>
+        </div>
+        <a href="ai-tools.html" class="nav-item">AI Tools</a>
+        <a href="blog.html" class="nav-item">Blog</a>
+        <a href="about.html" class="nav-item">About</a>
+      </nav>
+
+      <!-- Right side -->
+      <div class="flex-center gap-3">
+        <button class="theme-toggle flex-center" id="theme-toggle" aria-label="Toggle dark mode">
+          <!-- Toggle icon swapped dynamically by JS, default moon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #FCD34D;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </button>
+        <button class="hamburger" id="hamburger">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="relative" style="background: var(--bg-primary); min-height: 100vh;">
+    <!-- Ambient -->
+    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; overflow: hidden; z-index: -1;">
+      <div class="ambient-orb orb-animate" style="position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%); top: -5%; right: -5%;"></div>
+      <div class="ambient-orb orb-animate-reverse" style="position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%); bottom: 10%; left: -8%;"></div>
+    </div>
+
+    <!-- Header -->
+    <div style="max-width: 56rem; margin: 0 auto; padding: 7rem 1.5rem 5rem; position: relative; z-index: 10;">
+      <div style="text-align: center; margin-bottom: 3rem;">
+        <div class="badge badge-violet" style="display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+          <span style="margin-right: 0.375rem;">🤖</span> AI Prompt Tools
+        </div>
+        <h1 class="font-display font-semibold" style="font-size: 3rem; color: var(--text-primary); margin-bottom: 1rem; line-height: 1.2;">
+          AI Tools for <span class="gradient-text-violet" style="font-style: italic;">Students</span>
+        </h1>
+        <p style="font-size: 1.125rem; font-weight: 300; color: var(--text-secondary); max-width: 36rem; margin: 0 auto;">
+          Fill in the details, generate a ready-to-use AI prompt, and copy it to any AI chatbot like ChatGPT, Gemini, or Claude.
+        </p>
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; margin-top: 1rem; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15); color: #34D399;">
+          ✅ No external links — just copy the prompt and use it anywhere
+        </div>
+      </div>
+
+      <!-- Tools Container -->
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        
+        <!-- YOUTUBE TOOL -->
+        <div class="glass-card" style="border-radius: 1rem; padding: 2rem; background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.03));">
+          <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="flex-center" style="width: 3rem; height: 3rem; border-radius: 0.75rem; flex-shrink: 0; font-size: 1.5rem; background: #F8717118;">📹</div>
+            <div>
+              <h2 class="font-display font-semibold" style="font-size: 1.25rem; color: var(--text-primary);">YouTube Title Generator</h2>
+              <p style="font-size: 0.875rem; margin-top: 0.25rem; color: var(--text-secondary);">Generate 5 click-worthy YouTube titles for your video topic</p>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.375rem; color: var(--text-secondary);">Video Topic</label>
+              <input type="text" id="yt_topic" placeholder="e.g. How to study for exams effectively" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-primary); outline: none; font-family: inherit;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.375rem; color: var(--text-secondary);">Target Audience</label>
+              <input type="text" id="yt_audience" placeholder="e.g. College students, beginners" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-primary); outline: none; font-family: inherit;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.375rem; color: var(--text-secondary);">Title Style</label>
+              <input type="text" id="yt_style" placeholder="e.g. How-to, Listicle, Shocking fact" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-primary); outline: none; font-family: inherit;">
+            </div>
+          </div>
+          <button onclick="generateYTPrompt()" class="btn-primary" style="margin-bottom: 1.25rem; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; font-family: inherit; font-size: 0.875rem; border: none; cursor: pointer;">Generate Prompt ✨</button>
+          
+          <div id="yt_result_container" style="display: none;">
+            <div class="flex-between" style="margin-bottom: 0.5rem;">
+              <p style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);">Generated Prompt</p>
+              <button onclick="copyToClipboard('yt_result', 'yt_btn')" id="yt_btn" style="padding: 0.25rem 0.5rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; background: rgba(255, 255, 255, 0.1); color: var(--text-primary); border: none; cursor: pointer; transition: all 0.2s;">📋 Copy Prompt</button>
+            </div>
+            <div id="yt_result" style="padding: 1rem; border-radius: 0.75rem; font-size: 0.875rem; line-height: 1.625; white-space: pre-wrap; font-family: monospace; background: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle); color: var(--text-secondary); max-height: 200px; overflow-y: auto;"></div>
+            <p style="font-size: 0.75rem; margin-top: 0.5rem; color: var(--text-muted);">💡 Copy this prompt and paste it into ChatGPT, Gemini, Claude, or any AI chatbot.</p>
+          </div>
+        </div>
+
+        <!-- RESUME TOOL -->
+        <div class="glass-card" style="border-radius: 1rem; padding: 2rem; background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(124,58,237,0.03));">
+          <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="flex-center" style="width: 3rem; height: 3rem; border-radius: 0.75rem; flex-shrink: 0; font-size: 1.5rem; background: #A78BFA18;">📄</div>
+            <div>
+              <h2 class="font-display font-semibold" style="font-size: 1.25rem; color: var(--text-primary);">Resume Summary Generator</h2>
+              <p style="font-size: 0.875rem; margin-top: 0.25rem; color: var(--text-secondary);">Create a professional resume summary for freshers and students</p>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.375rem; color: var(--text-secondary);">Your Name</label>
+              <input type="text" id="resume_name" placeholder="e.g. Kalva Ajay Kumar" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-primary); outline: none; font-family: inherit;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.375rem; color: var(--text-secondary);">Degree & Branch</label>
+              <input type="text" id="resume_degree" placeholder="e.g. B.Tech Computer Science" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-primary); outline: none; font-family: inherit;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.375rem; color: var(--text-secondary);">Key Skills</label>
+              <input type="text" id="resume_skills" placeholder="e.g. Python, Data Analytics, Web Development" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-primary); outline: none; font-family: inherit;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.375rem; color: var(--text-secondary);">Career Goal</label>
+              <input type="text" id="resume_goal" placeholder="e.g. Software Developer, Data Analyst" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-primary); outline: none; font-family: inherit;">
+            </div>
+          </div>
+          <button onclick="generateResumePrompt()" class="btn-primary" style="margin-bottom: 1.25rem; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; font-family: inherit; font-size: 0.875rem; border: none; cursor: pointer;">Generate Prompt ✨</button>
+          
+          <div id="resume_result_container" style="display: none;">
+            <div class="flex-between" style="margin-bottom: 0.5rem;">
+              <p style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);">Generated Prompt</p>
+              <button onclick="copyToClipboard('resume_result', 'resume_btn')" id="resume_btn" style="padding: 0.25rem 0.5rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; background: rgba(255, 255, 255, 0.1); color: var(--text-primary); border: none; cursor: pointer; transition: all 0.2s;">📋 Copy Prompt</button>
+            </div>
+            <div id="resume_result" style="padding: 1rem; border-radius: 0.75rem; font-size: 0.875rem; line-height: 1.625; white-space: pre-wrap; font-family: monospace; background: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle); color: var(--text-secondary); max-height: 200px; overflow-y: auto;"></div>
+            <p style="font-size: 0.75rem; margin-top: 0.5rem; color: var(--text-muted);">💡 Copy this prompt and paste it into ChatGPT, Gemini, Claude, or any AI chatbot.</p>
+          </div>
+        </div>
+
+        <!-- STUDY PLAN TOOL -->
+        <div class="glass-card" style="border-radius: 1rem; padding: 2rem; background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.03));">
+          <div style="display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem;">
+            <div class="flex-center" style="width: 3rem; height: 3rem; border-radius: 0.75rem; flex-shrink: 0; font-size: 1.5rem; background: #34D39918;">📚</div>
+            <div>
+              <h2 class="font-display font-semibold" style="font-size: 1.25rem; color: var(--text-primary);">Study Plan Generator</h2>
+              <p style="font-size: 0.875rem; margin-top: 0.25rem; color: var(--text-secondary);">Get a personalized study schedule for your exam preparation</p>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.375rem; color: var(--text-secondary);">Subject / Exam</label>
+              <input type="text" id="study_subject" placeholder="e.g. Data Structures, GATE 2026" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-primary); outline: none; font-family: inherit;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.375rem; color: var(--text-secondary);">Days Available</label>
+              <input type="text" id="study_days" placeholder="e.g. 30 days" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-primary); outline: none; font-family: inherit;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.375rem; color: var(--text-secondary);">Current Level</label>
+              <input type="text" id="study_level" placeholder="e.g. Beginner, Intermediate" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); color: var(--text-primary); outline: none; font-family: inherit;">
+            </div>
+          </div>
+          <button onclick="generateStudyPrompt()" class="btn-primary" style="margin-bottom: 1.25rem; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; font-family: inherit; font-size: 0.875rem; border: none; cursor: pointer;">Generate Prompt ✨</button>
+          
+          <div id="study_result_container" style="display: none;">
+            <div class="flex-between" style="margin-bottom: 0.5rem;">
+              <p style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);">Generated Prompt</p>
+              <button onclick="copyToClipboard('study_result', 'study_btn')" id="study_btn" style="padding: 0.25rem 0.5rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; background: rgba(255, 255, 255, 0.1); color: var(--text-primary); border: none; cursor: pointer; transition: all 0.2s;">📋 Copy Prompt</button>
+            </div>
+            <div id="study_result" style="padding: 1rem; border-radius: 0.75rem; font-size: 0.875rem; line-height: 1.625; white-space: pre-wrap; font-family: monospace; background: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle); color: var(--text-secondary); max-height: 200px; overflow-y: auto;"></div>
+            <p style="font-size: 0.75rem; margin-top: 0.5rem; color: var(--text-muted);">💡 Copy this prompt and paste it into ChatGPT, Gemini, Claude, or any AI chatbot.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+    <footer class="site-footer" style="border-top: 1px solid var(--border-subtle); margin-top: 4rem;">
+    <div class="footer-container" style="max-width: 1200px; margin: 0 auto; padding: 3rem 5%; position: relative; z-index: 10;">
+      <div class="footer-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+        
+        <div class="footer-col">
+          <div class="flex-center gap-2 mb-3" style="justify-content: flex-start; margin-bottom: 0.75rem;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-violet);"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span class="font-display font-semibold text-sm" style="color: var(--text-primary); font-size: 0.875rem; font-weight: 600;">Toolsathi</span>
+          </div>
+          <p class="text-xs" style="color: var(--text-muted); font-size: 0.75rem; line-height: 1.6;">Free tools for students. Built by Kalva Ajay Kumar — CSE student & YouTuber.</p>
+        </div>
+
+        <div class="footer-col">
+          <p class="text-xs uppercase tracking-widest" style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 0.75rem; text-transform: uppercase;">Pages</p>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="index.html" style="color: var(--text-muted); font-size: 0.875rem;">Home</a>
+            <a href="ai-tools.html" style="color: var(--text-muted); font-size: 0.875rem;">AI Tools</a>
+            <a href="blog.html" style="color: var(--text-muted); font-size: 0.875rem;">Blog</a>
+            <a href="about.html" style="color: var(--text-muted); font-size: 0.875rem;">About</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <p class="text-xs uppercase tracking-widest" style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 0.75rem; text-transform: uppercase;">Tools</p>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="tools/age-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">Age Calculator</a>
+            <a href="tools/cgpa-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">CGPA Calculator</a>
+            <a href="tools/emi-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">EMI Calculator</a>
+            <a href="tools/percentage-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">Percentage Calc</a>
+            <a href="tools/bmi-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">BMI Calculator</a>
+            <a href="tools/discount-calculator.html" style="color: var(--text-muted); font-size: 0.875rem;">Discount Calc</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <p class="text-xs uppercase tracking-widest" style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; margin-bottom: 0.75rem; text-transform: uppercase;">Creator</p>
+          <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+            <p style="color: var(--text-secondary); font-size: 0.875rem; font-weight: 600;">Kalva Ajay Kumar</p>
+            <p style="color: var(--text-muted); font-size: 0.75rem;">CSE Student · YouTuber</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="flex-between" style="border-top: 1px solid var(--border-subtle); padding-top: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+        <p style="color: var(--text-muted); font-size: 0.75rem;">© 2026 Toolsathi — All rights reserved</p>
+        <div style="display: flex; gap: 1rem;">
+          <a href="login.html" style="color: var(--text-muted); font-size: 0.75rem;">Admin</a>
+          <a href="about.html" style="color: var(--text-muted); font-size: 0.75rem;">About</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/script.js"></script>
+  <script>
+    function generateYTPrompt() {
+      const topic = document.getElementById('yt_topic').value || '[your topic]';
+      const audience = document.getElementById('yt_audience').value || 'students';
+      const style = document.getElementById('yt_style').value || 'engaging';
+      
+      const prompt = `Act as a YouTube SEO expert. Generate 5 highly click-worthy, SEO-optimized YouTube video titles for the following:\n\nTopic: ${topic}\nTarget Audience: ${audience}\nTitle Style: ${style}\n\nRequirements:\n- Each title should be under 60 characters\n- Include power words and numbers where relevant\n- Make them curiosity-driven and searchable\n- Avoid clickbait — titles must match the content\n\nProvide 5 title options with a brief explanation for each.`;
+      
+      document.getElementById('yt_result').textContent = prompt;
+      document.getElementById('yt_result_container').style.display = 'block';
+    }
+
+    function generateResumePrompt() {
+      const name = document.getElementById('resume_name').value || '[Name]';
+      const degree = document.getElementById('resume_degree').value || 'B.Tech';
+      const skills = document.getElementById('resume_skills').value || '[skills]';
+      const goal = document.getElementById('resume_goal').value || 'Software Developer';
+
+      const prompt = `Act as a professional resume writer. Write a compelling resume summary (3–4 sentences) for a fresher with the following details:\n\nName: ${name}\nDegree: ${degree}\nKey Skills: ${skills}\nCareer Goal: ${goal}\n\nRequirements:\n- Professional and confident tone\n- Highlight skills and enthusiasm\n- Mention career objective clearly\n- Keep it under 80 words\n- Suitable for Indian job market\n\nAlso provide 3 alternative versions with different tones: formal, creative, and technical.`;
+
+      document.getElementById('resume_result').textContent = prompt;
+      document.getElementById('resume_result_container').style.display = 'block';
+    }
+
+    function generateStudyPrompt() {
+      const subject = document.getElementById('study_subject').value || '[subject]';
+      const days = document.getElementById('study_days').value || '30 days';
+      const level = document.getElementById('study_level').value || 'Beginner';
+
+      const prompt = `Act as an expert academic coach. Create a detailed study plan for:\n\nSubject/Exam: ${subject}\nTime Available: ${days}\nCurrent Level: ${level}\n\nInclude:\n- Week-by-week breakdown\n- Daily study hours recommendation\n- Topics to cover each week\n- Revision strategy\n- Practice test schedule\n- Tips to stay motivated\n\nMake it realistic and achievable for a college student.`;
+
+      document.getElementById('study_result').textContent = prompt;
+      document.getElementById('study_result_container').style.display = 'block';
+    }
+
+    function copyToClipboard(resultId, btnId) {
+      const text = document.getElementById(resultId).textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById(btnId);
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✅ Copied!';
+        btn.style.color = '#10B981';
+        setTimeout(() => {
+          btn.innerHTML = '📋 Copy Prompt';
+          btn.style.color = 'var(--text-primary)';
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

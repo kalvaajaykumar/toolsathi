@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — Toolsathi</title>
+  <meta name="description" content="Admin login for Toolsathi dashboard.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="background: var(--bg-primary);">
+  <main class="relative min-h-screen flex items-center justify-center px-4" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; position: relative;">
+    <!-- Ambient orbs -->
+    <div style="position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0;">
+      <div class="ambient-orb orb-animate" style="position: absolute; width: 500px; height: 500px; background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%); top: -10%; right: -5%;"></div>
+      <div class="ambient-orb orb-animate-reverse" style="position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(245,158,11,0.1) 0%, transparent 70%); bottom: 5%; left: -8%;"></div>
+    </div>
+
+    <div style="position: relative; z-index: 10; width: 100%; max-width: 28rem;">
+      <!-- Logo -->
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <div style="width: 4rem; height: 4rem; border-radius: 1rem; margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-family: var(--font-display); font-weight: 700; background: linear-gradient(135deg, #7C3AED, #F59E0B); color: white;">
+          T
+        </div>
+        <h1 class="font-display font-semibold" style="font-size: 1.875rem; color: var(--text-primary);">
+          Toolsathi <span class="gradient-text-violet italic">Admin</span>
+        </h1>
+        <p style="font-size: 0.875rem; margin-top: 0.5rem; color: var(--text-muted);">Sign in to access the dashboard</p>
+      </div>
+
+      <!-- Card -->
+      <div class="glass-card" style="border-radius: 1rem; padding: 2rem;">
+        <form id="login-form" style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div>
+            <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-secondary);">Username</label>
+            <input type="text" id="login-user" class="tool-input" placeholder="Enter username" style="width: 100%; outline: none;" required autocomplete="username" oninput="hideLoginError()">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-secondary);">Password</label>
+            <div style="position: relative;">
+              <input type="password" id="login-pass" class="tool-input" placeholder="Enter password" style="width: 100%; padding-right: 3rem; outline: none;" required autocomplete="current-password" oninput="hideLoginError()">
+              <button type="button" onclick="togglePass()" id="toggle-pass-btn" style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); font-size: 0.875rem; color: var(--text-muted); background: none; border: none; cursor: pointer; padding: 0.25rem;">
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <div id="login-err" style="display: none; padding: 0.75rem; border-radius: 0.75rem; font-size: 0.875rem; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #F87171;"></div>
+
+          <button id="login-btn" type="submit" class="btn-primary" style="width: 100%; border-radius: 0.5rem; padding: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+            Sign In →
+          </button>
+        </form>
+
+        <div style="margin-top: 1.5rem; padding: 0.75rem; border-radius: 0.75rem; text-align: center; font-size: 0.75rem; background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.15); color: var(--text-muted);">
+          Demo credentials: <strong style="color: var(--accent-violet-light);">admin</strong> / <strong style="color: var(--accent-violet-light);">1234</strong>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+        <a href="index.html" style="font-size: 0.875rem; color: var(--text-muted); text-decoration: none;">&larr; Back to Home</a>
+        <p style="font-size: 0.75rem; color: var(--text-muted);">© 2026 Toolsathi — Built by Kalva Ajay Kumar</p>
+      </div>
+
+    </div>
+  </main>
+
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+  <script src="js/script.js"></script>
+  <script>
+    let showPass = false;
+    function togglePass() {
+      showPass = !showPass;
+      const inp = document.getElementById('login-pass');
+      const btn = document.getElementById('toggle-pass-btn');
+      inp.type = showPass ? 'text' : 'password';
+      btn.textContent = showPass ? '🙈' : '👁️';
+    }
+
+    function hideLoginError() {
+      document.getElementById('login-err').style.display = 'none';
+    }
+
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const u = document.getElementById('login-user').value;
+      const p = document.getElementById('login-pass').value;
+      const errBox = document.getElementById('login-err');
+      const btn = document.getElementById('login-btn');
+
+      errBox.style.display = 'none';
+      btn.disabled = true;
+      btn.innerHTML = `<span style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+        <svg style="animation: spin 1s linear infinite;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg>
+        Signing in...
+      </span>`;
+
+      setTimeout(() => {
+        if (u === 'admin' && p === '1234') {
+          localStorage.setItem('toolsathi-admin', 'true');
+          window.location.href = 'admin.html';
+        } else {
+          errBox.textContent = '⚠️ Invalid username or password. Try admin / 1234';
+          errBox.style.display = 'block';
+          btn.disabled = false;
+          btn.textContent = 'Sign In →';
+        }
+      }, 600);
+    });
+  </script>
+</body>
+</html>
