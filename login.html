@@ -95,11 +95,12 @@
       </span>`;
 
       setTimeout(() => {
-        if (u === 'admin' && p === '1234') {
+        const storedPass = localStorage.getItem('toolsathi-admin-pass') || '1234';
+        if (u === 'admin' && p === storedPass) {
           localStorage.setItem('toolsathi-admin', 'true');
           window.location.href = 'admin.html';
         } else {
-          errBox.textContent = '⚠️ Invalid username or password. Try admin / 1234';
+          errBox.textContent = '⚠️ Invalid username or password.';
           errBox.style.display = 'block';
           btn.disabled = false;
           btn.textContent = 'Sign In →';
