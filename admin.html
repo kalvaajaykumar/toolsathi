@@ -6,6 +6,12 @@
   <title>Admin Dashboard — Toolsathi</title>
   <meta name="description" content="Toolsathi admin dashboard.">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Auth guard — redirect to login if not authenticated
+    if (localStorage.getItem('toolsathi-admin') !== 'true') {
+      window.location.replace('login.html');
+    }
+  </script>
   <style>
     /* Admin specific overwrites */
     .admin-section { display: none; }
@@ -55,7 +61,7 @@
         <a href="index.html" class="nav-btn" style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; transition: all 0.2s; color: var(--text-muted); text-decoration: none;">
           🏠 View Website
         </a>
-        <button onclick="window.location.href='login.html'" style="width: 100%; display: flex; align-items: center; justify-content: flex-start; gap: 0.75rem; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-family: inherit; transition: all 0.2s; border: none; cursor: pointer; text-align: left; background: transparent; color: #F87171;">
+        <button onclick="adminLogout()" style="width: 100%; display: flex; align-items: center; justify-content: flex-start; gap: 0.75rem; padding: 0.5rem 1rem; border-radius: 0.75rem; font-size: 0.875rem; font-family: inherit; transition: all 0.2s; border: none; cursor: pointer; text-align: left; background: transparent; color: #F87171;">
           🚪 Logout
         </button>
       </div>
@@ -67,7 +73,9 @@
       <!-- Top bar -->
       <header style="position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; height: 4rem; border-bottom: 1px solid var(--border-subtle); background: var(--bg-secondary);">
         <div style="display: flex; align-items: center; gap: 0.75rem;">
-          <button class="theme-toggle flex-center" id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+          <button class="theme-toggle flex-center" id="theme-toggle" aria-label="Toggle dark mode" style="width: 2.25rem; height: 2.25rem; border-radius: 0.5rem; background: var(--bg-card); border: 1px solid var(--border-subtle); cursor: pointer; display: flex; align-items: center; justify-content: center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FCD34D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </button>
           <h1 id="page-title" class="font-display font-semibold" style="font-size: 1.125rem; margin:0; color: var(--text-primary); text-transform: capitalize;">Overview</h1>
         </div>
         <div style="display: flex; align-items: center; gap: 0.75rem;">
@@ -264,7 +272,12 @@
 
   <script src="js/script.js"></script>
   <script>
-    // Tab switching logic mimicking React "useState"
+    // Auth guard double-check
+    function adminLogout() {
+      localStorage.removeItem('toolsathi-admin');
+      window.location.href = 'login.html';
+    }
+
     const navBtns = document.querySelectorAll('.nav-btn');
     const sections = document.querySelectorAll('.admin-section');
     const pageTitle = document.getElementById('page-title');
