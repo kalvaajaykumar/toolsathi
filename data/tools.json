@@ -1,0 +1,184 @@
+[
+  {
+    "id": "cgpa",
+    "icon": "🎓",
+    "name": "CGPA Calculator",
+    "description": "A comprehensive tool for university students to calculate semester Grade Point Average (GPA) and Cumulative GPA using a weighted credit system optimized for 10-point scales.",
+    "tag": "Academic",
+    "color": "#A78BFA",
+    "path": "tools/cgpa-calculator.html",
+    "isStatic": true
+  },
+  {
+    "id": "emi",
+    "icon": "💰",
+    "name": "EMI Calculator",
+    "description": "Calculate your Equated Monthly Installments (EMI) with precision. Ideal for planning home, car, or personal loans with instant breakdown of interest and principal components.",
+    "tag": "Finance",
+    "color": "#F59E0B",
+    "path": "tools/emi-calculator.html",
+    "isStatic": true
+  },
+  {
+    "id": "pct",
+    "icon": "📊",
+    "name": "Percentage Calculator",
+    "description": "An essential math utility to find percentages, calculate percentage increases or decreases, and determine the ratio between two numbers with speed and accuracy.",
+    "tag": "Math",
+    "color": "#10B981",
+    "path": "tools/percentage-calculator.html",
+    "isStatic": true
+  },
+  {
+    "id": "age",
+    "icon": "🎂",
+    "name": "Age Calculator",
+    "description": "Discover your exact age down to the day. This tool calculates the total years, months, and days from your date of birth, perfect for official forms and personal milestones.",
+    "tag": "Utility",
+    "color": "#A78BFA",
+    "path": "tools/age-calculator.html",
+    "isStatic": true
+  },
+  {
+    "id": "bmi",
+    "icon": "⚖️",
+    "name": "BMI Calculator",
+    "description": "Monitor your health with our Body Mass Index (BMI) calculator. It provides immediate health category results based on World Health Organization (WHO) standards for weight and height.",
+    "tag": "Health",
+    "color": "#10B981",
+    "path": "tools/bmi-calculator.html",
+    "isStatic": true
+  },
+  {
+    "id": "disc",
+    "icon": "🏷️",
+    "name": "Discount Calculator",
+    "description": "A must-have tool for shoppers. Instantly calculate the final discounted price and total savings for any item by entering the original price and the discount percentage.",
+    "tag": "Shopping",
+    "color": "#F59E0B",
+    "path": "tools/discount-calculator.html",
+    "isStatic": true
+  },
+  {
+    "id": "ytt",
+    "icon": "▶️",
+    "name": "YouTube Title Generator",
+    "description": "Generate high-CTR, viral YouTube titles instantly. Our smart logic creates attention-grabbing headlines based on your topic and audience.",
+    "tag": "AI Tools",
+    "color": "#F87171",
+    "isStatic": false,
+    "isDirect": true,
+    "inputs": [
+      { "id": "topic", "label": "Video Topic", "placeholder": "e.g. How to learn JavaScript" },
+      { "id": "audience", "label": "Target Audience", "placeholder": "e.g. Beginners" },
+      { "id": "style", "label": "Title Style", "placeholder": "e.g. How-to, Listicle" }
+    ],
+    "promptTemplate": "Generate 5 viral YouTube titles for a video about {topic} targeting {audience} in {style} style."
+  },
+  {
+    "id": "grammar",
+    "icon": "✍️",
+    "name": "Grammar Fixer",
+    "description": "Elevate your writing with our AI Grammar Fixer. Professional corrections for assignments, emails, and articles to ensure clarity and perfect punctuation.",
+    "tag": "AI Tools",
+    "color": "#3B82F6",
+    "isStatic": false,
+    "inputs": [
+      { "id": "text", "label": "Copy-Paste Text", "placeholder": "Enter your text here...", "type": "textarea" },
+      { "id": "tone", "label": "Desired Tone", "placeholder": "e.g. Academic, Casual, Professional" }
+    ],
+    "promptTemplate": "Fix the grammar, spelling, and clarity of the following text while maintaining a {tone} tone:\n\n{text}"
+  },
+  {
+    "id": "story",
+    "icon": "📖",
+    "name": "Story Generator",
+    "description": "Unleash your creativity with AI-powered storytelling. Generate unique short stories for kids, assignments, or creative projects.",
+    "tag": "Creative",
+    "color": "#F59E0B",
+    "isStatic": false,
+    "inputs": [
+      { "id": "genre", "label": "Story Genre", "placeholder": "e.g. Sci-Fi, Magic, Adventure" },
+      { "id": "char", "label": "Main Character", "placeholder": "e.g. A brave cat" },
+      { "id": "theme", "label": "Main Theme", "placeholder": "e.g. Friendship, Space travel" }
+    ],
+    "promptTemplate": "Write a 300-word {genre} story about {char} with a theme of {theme}."
+  },
+  {
+    "id": "code",
+    "icon": "💻",
+    "name": "Code Commenter",
+    "description": "Save time on documentation. Our smart logic adds professional comments to your code snippets to explain logic and flow.",
+    "tag": "Developer",
+    "color": "#10B981",
+    "isStatic": false,
+    "inputs": [
+      { "id": "language", "label": "Programming Language", "placeholder": "e.g. Python, JS" },
+      { "id": "snippet", "label": "Code Snippet", "placeholder": "Paste code here...", "type": "textarea" }
+    ],
+    "promptTemplate": "Add technical, professional comments to this {language} code:\n\n{snippet}"
+  },
+  {
+    "id": "res",
+    "icon": "📄",
+    "name": "Resume Summary",
+    "description": "Craft an impactful professional profile instantly. Our smart generator analyzes your skills to create a standout resume summary.",
+    "tag": "AI Tools",
+    "color": "#3B82F6",
+    "isStatic": false,
+    "isDirect": true,
+    "inputs": [
+      { "id": "name", "label": "Your Name", "placeholder": "e.g. John Doe" },
+      { "id": "degree", "label": "Degree", "placeholder": "e.g. B.Tech CS" },
+      { "id": "skills", "label": "Top Skills", "placeholder": "e.g. Python, React" },
+      { "id": "goal", "label": "Career Goal", "placeholder": "e.g. Software Dev" }
+    ],
+    "promptTemplate": "Write a professional resume summary for {name}, a {degree} graduate with {skills} skills aiming for a {goal} role."
+  },
+  {
+    "id": "study",
+    "icon": "📚",
+    "name": "Study Plan Generator",
+    "description": "Get a personalized study schedule instantly. Just enter your subject, days available, and level to get a structured plan.",
+    "tag": "Academic",
+    "color": "#10B981",
+    "isStatic": false,
+    "isDirect": true,
+    "inputs": [
+      { "id": "subject", "label": "Subject / Exam", "placeholder": "e.g. Math, Coding" },
+      { "id": "days", "label": "Days Available", "placeholder": "e.g. 30 days" },
+      { "id": "level", "label": "Current Level", "placeholder": "e.g. Beginner" }
+    ],
+    "promptTemplate": "Create a study plan for {subject} over {days} starting from {level} level."
+  },
+  {
+    "id": "taskmgr",
+    "icon": "📝",
+    "name": "Study Task Manager",
+    "description": "Stay organized and productive. A simple, persistent tool to track your daily study goals and academic tasks.",
+    "tag": "Academic",
+    "color": "#A78BFA",
+    "path": "tools/study-task-manager.html",
+    "isStatic": true
+  },
+  {
+    "id": "gpapred",
+    "icon": "📈",
+    "name": "GPA Predictor",
+    "description": "Simulate your future CGPA. See what grades you need in your current semester to reach your targets precisely.",
+    "tag": "Academic",
+    "color": "#10B981",
+    "path": "tools/gpa-predictor.html",
+    "isStatic": true
+  },
+  {
+    "id": "motivate",
+    "icon": "✨",
+    "name": "Daily Motivation",
+    "description": "Fuel your study sessions with handpicked motivational quotes. Keep your focus sharp and your goals in sight.",
+    "tag": "Inspiration",
+    "color": "#F59E0B",
+    "path": "tools/motivation.html",
+    "isStatic": true
+  }
+]

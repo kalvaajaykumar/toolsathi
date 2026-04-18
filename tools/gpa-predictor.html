@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPA Predictor — Plan Your Grades | Toolsathi</title>
+  <meta name="description" content="Predict your future CGPA by simulating your current semester grades. A essential planning tool for ambitious students.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .predictor-card {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2.5rem;
+      border-radius: 2rem;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.02) 100%);
+      border: 1px solid rgba(16, 185, 129, 0.15);
+      backdrop-filter: blur(10px);
+    }
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+    .input-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-secondary);
+    }
+    .input-field {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      outline: none;
+      transition: all 0.3s;
+    }
+    .input-field:focus {
+      border-color: #10B981;
+      background: rgba(16, 185, 129, 0.05);
+    }
+    .result-box {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      text-align: center;
+      display: none;
+    }
+    .cgpa-value {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #34D399;
+      line-height: 1;
+      margin: 0.5rem 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="glass-nav z-50">
+    <div style="max-width: 72rem; margin: 0 auto; padding: 0 1rem; height: 4rem; display: flex; align-items: center; justify-content: space-between;">
+      <a href="../index.html" class="logo flex items-center cursor-pointer hover:opacity-80 transition-opacity group" style="text-decoration: none; gap: 0.5rem;" >
+        <img src="../assets/images/app_logo.png" alt="Toolsathi Logo" width="32" height="32" class="flex-shrink-0" style="border-radius: 0.25rem;" loading="lazy" onerror="this.onerror=null; this.outerHTML='<span style=\'display:flex; width:32px; height:32px; align-items:center; justify-content:center; background:var(--accent-violet); color:white; border-radius:0.25rem; font-weight:bold;\'>T</span>'" />
+        <span class="font-display font-semibold text-lg tracking-tight" style="color: var(--text-primary);">Toolsathi</span>
+      </a>
+      <nav class="nav-links">
+        <a href="../index.html" class="nav-item">Home</a>
+        <a href="../ai-tools.html" class="nav-item">AI Tools</a>
+        <a href="../blog.html" class="nav-item">Blog</a>
+      </nav>
+      <button class="theme-toggle" id="theme-toggle" style="background:transparent; border:none; cursor:pointer; color:var(--text-primary);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main style="padding-top: 6rem; min-height: 80vh;">
+    <div style="max-width: 72rem; margin: 0 auto; padding: 0 1.5rem;">
+      <div class="text-center mb-12">
+        <div class="badge badge-green mb-4">Academic Planning</div>
+        <h1 class="font-display font-bold" style="font-size: 2.5rem; margin-bottom: 1rem;">GPA Predictor</h1>
+        <p style="color: var(--text-secondary); max-width: 32rem; margin: 0 auto;">Simulate your future CGPA. See what grades you need in your current semester to reach your targets.</p>
+      </div>
+
+      <div class="predictor-card">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+          <div class="input-group">
+            <label class="input-label">Current CGPA</label>
+            <input type="number" id="curr-cgpa" class="input-field" placeholder="e.g. 8.5" step="0.01">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Total Credits (Until Last Sem)</label>
+            <input type="number" id="prev-credits" class="input-field" placeholder="e.g. 80">
+          </div>
+        </div>
+
+        <div style="padding: 1rem; margin: 1rem 0; border-radius: 1rem; background: rgba(255,255,255,0.02); border: 1px dashed var(--border-subtle);">
+          <p style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem;">Current Semester Simulation</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="input-group">
+              <label class="input-label">Semester Credits</label>
+              <input type="number" id="sem-credits" class="input-field" placeholder="e.g. 20">
+            </div>
+            <div class="input-group">
+              <label class="input-label">Expected Semester GPA</label>
+              <input type="number" id="expected-sgpa" class="input-field" placeholder="e.g. 9.0" step="0.01">
+            </div>
+          </div>
+        </div>
+
+        <button onclick="predictGPA()" class="btn-primary" style="width: 100%; padding: 1rem; background: #10B981; border: none;">Predict New CGPA 🚀</button>
+
+        <div id="result-box" class="result-box">
+          <p style="font-size: 0.875rem; color: var(--text-secondary);">Your Predicted Cumulative GPA</p>
+          <div class="cgpa-value" id="new-cgpa">0.00</div>
+          <p id="feedback-msg" style="font-size: 0.875rem; margin-top: 0.5rem; color: #10B981; font-weight: 600;"></p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function predictGPA() {
+      const currCgpa = parseFloat(document.getElementById('curr-cgpa').value);
+      const prevCredits = parseFloat(document.getElementById('prev-credits').value);
+      const semCredits = parseFloat(document.getElementById('sem-credits').value);
+      const expectedSgpa = parseFloat(document.getElementById('expected-sgpa').value);
+
+      if (isNaN(currCgpa) || isNaN(prevCredits) || isNaN(semCredits) || isNaN(expectedSgpa)) {
+        alert("Please fill all fields with valid numbers.");
+        return;
+      }
+
+      const totalCredits = prevCredits + semCredits;
+      const newCgpa = ((currCgpa * prevCredits) + (expectedSgpa * semCredits)) / totalCredits;
+
+      const resultBox = document.getElementById('result-box');
+      const cgpaDisplay = document.getElementById('new-cgpa');
+      const feedback = document.getElementById('feedback-msg');
+
+      cgpaDisplay.textContent = newCgpa.toFixed(2);
+      resultBox.style.display = 'block';
+      
+      if(newCgpa > currCgpa) {
+        feedback.textContent = "📈 Great! Your CGPA is increasing.";
+      } else if(newCgpa < currCgpa) {
+        feedback.textContent = "📉 Warning: Your CGPA might decrease.";
+      } else {
+        feedback.textContent = "⚖️ Your CGPA remains stable.";
+      }
+
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    });
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+  </script>
+</body>
+</html>

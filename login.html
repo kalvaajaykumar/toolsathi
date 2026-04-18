@@ -6,6 +6,15 @@
   <title>Admin Login — Toolsathi</title>
   <meta name="description" content="Admin login for Toolsathi dashboard.">
   <link rel="stylesheet" href="css/style.css">
+  <script>
+    // Only redirect if actively logged in — check both flags
+    if (localStorage.getItem('toolsathi-admin') === 'true' && sessionStorage.getItem('ts-session') === 'active') {
+      window.location.replace('admin.html');
+    } else {
+      // Clear stale auth if session expired
+      localStorage.removeItem('toolsathi-admin');
+    }
+  </script>
 </head>
 <body style="background: var(--bg-primary);">
   <main class="relative min-h-screen flex items-center justify-center px-4" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; position: relative;">
@@ -98,6 +107,7 @@
         const storedPass = localStorage.getItem('ts-admin-pass') || '1234';
         if (u === 'admin' && p === storedPass) {
           localStorage.setItem('toolsathi-admin', 'true');
+          sessionStorage.setItem('ts-session', 'active');
           window.location.href = 'admin.html';
         } else {
           errBox.textContent = '⚠️ Invalid username or password.';

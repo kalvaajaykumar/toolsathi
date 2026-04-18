@@ -1,0 +1,102 @@
+/**
+ * Toolsathi Dynamic Tool Styles
+ */
+
+:root {
+    --accent-glow: rgba(124, 58, 237, 0.15);
+}
+
+.tool-container {
+    max-width: 800px;
+    margin: 6rem auto 4rem;
+    padding: 0 1.5rem;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.625rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+}
+
+.input-field {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--accent-violet);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 0 4px var(--accent-glow);
+}
+
+textarea.input-field {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+/* Header Enhancements */
+#tool-icon {
+    box-shadow: 0 8px 16px -4px rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Result Area */
+.result-area {
+    margin-top: 2.5rem;
+    display: none;
+    animation: slideUpFade 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#prompt-output {
+    position: relative;
+    overflow: hidden;
+}
+
+#prompt-output::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.02));
+    pointer-events: none;
+}
+
+#copy-btn {
+    transition: all 0.2s;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+}
+
+#copy-btn:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Responsive adjust */
+@media (max-width: 640px) {
+    .tool-container {
+        margin-top: 5rem;
+    }
+    .font-display {
+        font-size: 1.75rem !important;
+    }
+}

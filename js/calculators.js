@@ -1,6 +1,28 @@
-// Calculator Logic
-
 document.addEventListener('DOMContentLoaded', () => {
+  // Helper to show/hide error
+  function showError(prefix, msg) {
+    const box = document.getElementById(`${prefix}-error-box`);
+    const txt = document.getElementById(`${prefix}-error-text`);
+    const res = document.getElementById(`${prefix}-result-box`);
+    if (box && txt) {
+      txt.textContent = msg;
+      box.style.display = 'block';
+      if (res) res.style.display = 'none';
+    }
+  }
+
+  function hideError(prefix) {
+    const box = document.getElementById(`${prefix}-error-box`);
+    if (box) box.style.display = 'none';
+  }
+
+  function showResult(prefix) {
+    const box = document.getElementById(`${prefix}-result-box`);
+    if (box) {
+      box.style.display = 'block';
+      box.classList.add('active');
+    }
+  }
 
   // 1. Age Calculator
   const ageForm = document.getElementById('age-form');
@@ -8,11 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
     ageForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const dobInput = document.getElementById('dob').value;
-      const errBox = document.getElementById('age-error-box');
-      const errText = document.getElementById('age-error-text');
-
+      
       if (!dobInput) {
-        if(errBox) { errBox.style.display = 'block'; errText.textContent = 'Please enter your date of birth.'; }
+        showError('age', 'Please enter your date of birth.');
         return;
       }
 
@@ -20,11 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
       const today = new Date();
 
       if (dob > today) {
-        if(errBox) { errBox.style.display = 'block'; errText.textContent = 'Date of birth cannot be in the future.'; }
+        showError('age', 'Date of birth cannot be in the future.');
         return;
       }
       
-      if(errBox) errBox.style.display = 'none';
+      hideError('age');
 
       let years = today.getFullYear() - dob.getFullYear();
       let months = today.getMonth() - dob.getMonth();
@@ -32,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (days < 0) {
         months--;
-        // Get days in previous month
         const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
         days += prevMonth.getDate();
       }
@@ -51,8 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const totalEl = document.getElementById('age-result-total');
       if(totalEl) totalEl.textContent = totalDays.toLocaleString();
 
-      document.getElementById('age-result-box').classList.add('active');
-      document.getElementById('age-result-box').style.display = 'block';
+      showResult('age');
     });
   }
 
@@ -62,38 +80,47 @@ document.addEventListener('DOMContentLoaded', () => {
   const subjectsContainer = document.getElementById('subjects-container');
   
   if (cgpaForm) {
-    let subjectCount = 3; // Default 3 inputs
+    let subjectCount = 3;
 
-    addSubjectBtn.addEventListener('click', () => {
-      subjectCount++;
-      const div = document.createElement('div');
-      div.className = 'form-group flex-between';
-      div.innerHTML = `
-        <input type="text" class="form-control" placeholder="Subject ${subjectCount}" style="width: 48%;">
-        <input type="number" class="form-control gpa-input" placeholder="GPA (0-10)" step="0.01" min="0" max="10" required style="width: 48%;">
-      `;
-      subjectsContainer.appendChild(div);
-    });
+    if (addSubjectBtn) {
+      addSubjectBtn.addEventListener('click', () => {
+        subjectCount++;
+        const div = document.createElement('div');
+        div.className = 'form-group flex-between';
+        div.innerHTML = `
+          <input type="text" class="form-control" placeholder="Subject ${subjectCount}" style="width: 48%;">
+          <input type="number" class="form-control gpa-input" placeholder="GPA (0-10)" step="0.01" min="0" max="10" required style="width: 48%;">
+        `;
+        subjectsContainer.appendChild(div);
+      });
+    }
 
     cgpaForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const inputs = document.querySelectorAll('.gpa-input');
       let totalGPA = 0;
       let validInputs = 0;
+      let hasInvalid = false;
 
       inputs.forEach(input => {
         const val = parseFloat(input.value);
-        if (!isNaN(val)) {
+        if (isNaN(val) || val < 0 || val > 10) {
+          hasInvalid = true;
+        } else {
           totalGPA += val;
           validInputs++;
         }
       });
 
-      if (validInputs > 0) {
-        let cgpa = (totalGPA / validInputs).toFixed(2);
-        document.getElementById('cgpa-val').textContent = cgpa;
-        document.getElementById('cgpa-result-box').classList.add('active');
+      if (hasInvalid || validInputs === 0) {
+        showError('cgpa', 'Please enter valid GPA values (0-10) for all subjects.');
+        return;
       }
+
+      hideError('cgpa');
+      let cgpa = (totalGPA / validInputs).toFixed(2);
+      document.getElementById('cgpa-val').textContent = cgpa;
+      showResult('cgpa');
     });
   }
 
@@ -106,13 +133,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const annualRate = parseFloat(document.getElementById('interest-rate').value);
       const months = parseFloat(document.getElementById('duration-months').value);
 
-      if (principal > 0 && annualRate > 0 && months > 0) {
-        const r = annualRate / 12 / 100;
-        const emi = (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
-        
-        document.getElementById('emi-val').textContent = '₹' + emi.toFixed(2);
-        document.getElementById('emi-result-box').classList.add('active');
+      if (isNaN(principal) || principal <= 0 || isNaN(annualRate) || annualRate <= 0 || isNaN(months) || months <= 0) {
+        showError('emi', 'Please enter valid positive numbers for all fields.');
+        return;
       }
+
+      hideError('emi');
+      const r = annualRate / 12 / 100;
+      const emi = (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+      
+      document.getElementById('emi-val').textContent = '₹' + emi.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      showResult('emi');
     });
   }
 
@@ -124,11 +155,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const percent = parseFloat(document.getElementById('percent-input').value);
       const total = parseFloat(document.getElementById('total-input').value);
 
-      if (!isNaN(percent) && !isNaN(total)) {
-        const result = (percent / 100) * total;
-        document.getElementById('perc-val').textContent = result.toFixed(2);
-        document.getElementById('perc-result-box').classList.add('active');
+      if (isNaN(percent) || isNaN(total)) {
+        showError('perc', 'Please enter valid numerical values.');
+        return;
       }
+
+      hideError('perc');
+      const result = (percent / 100) * total;
+      document.getElementById('perc-val').textContent = result.toFixed(2);
+      showResult('perc');
     });
   }
 
@@ -140,19 +175,23 @@ document.addEventListener('DOMContentLoaded', () => {
       const weight = parseFloat(document.getElementById('weight-input').value);
       const heightCm = parseFloat(document.getElementById('height-input').value);
 
-      if (weight > 0 && heightCm > 0) {
-        const heightM = heightCm / 100;
-        const bmi = weight / (heightM * heightM);
-        let category = '';
-
-        if (bmi < 18.5) category = 'Underweight';
-        else if (bmi < 24.9) category = 'Normal weight';
-        else if (bmi < 29.9) category = 'Overweight';
-        else category = 'Obesity';
-
-        document.getElementById('bmi-val').textContent = bmi.toFixed(1) + ' (' + category + ')';
-        document.getElementById('bmi-result-box').classList.add('active');
+      if (isNaN(weight) || weight <= 0 || isNaN(heightCm) || heightCm <= 0) {
+        showError('bmi', 'Please enter a valid weight and height.');
+        return;
       }
+
+      hideError('bmi');
+      const heightM = heightCm / 100;
+      const bmi = weight / (heightM * heightM);
+      let category = '';
+
+      if (bmi < 18.5) category = 'Underweight';
+      else if (bmi < 24.9) category = 'Normal weight';
+      else if (bmi < 29.9) category = 'Overweight';
+      else category = 'Obesity';
+
+      document.getElementById('bmi-val').textContent = bmi.toFixed(1) + ' (' + category + ')';
+      showResult('bmi');
     });
   }
 
@@ -164,13 +203,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const originalPrice = parseFloat(document.getElementById('original-price').value);
       const discountPercent = parseFloat(document.getElementById('discount-percent').value);
 
-      if (originalPrice > 0 && discountPercent >= 0) {
-        const savings = (originalPrice * discountPercent) / 100;
-        const finalPrice = originalPrice - savings;
-
-        document.getElementById('discount-val').textContent = '₹' + finalPrice.toFixed(2) + ' (Saved: ₹' + savings.toFixed(2) + ')';
-        document.getElementById('discount-result-box').classList.add('active');
+      if (isNaN(originalPrice) || originalPrice <= 0 || isNaN(discountPercent) || discountPercent < 0 || discountPercent > 100) {
+        showError('discount', 'Please enter valid numbers (Discount: 0-100%).');
+        return;
       }
+
+      hideError('discount');
+      const savings = (originalPrice * discountPercent) / 100;
+      const finalPrice = originalPrice - savings;
+
+      document.getElementById('discount-val').textContent = '₹' + finalPrice.toLocaleString('en-IN', {minimumFractionDigits: 2}) + ' (Saved: ₹' + savings.toLocaleString('en-IN') + ')';
+      showResult('discount');
     });
   }
 

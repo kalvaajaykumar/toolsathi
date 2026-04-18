@@ -1,14 +1,18 @@
 // Global Features
 
 document.addEventListener('DOMContentLoaded', () => {
-  // ── Theme Toggle ──────────────────────────────────────────
+  // --- Theme Toggle ------------------------------------------
   const btn = document.getElementById('theme-toggle');
   const stored = localStorage.getItem('toolsathi-theme');
   let dark = stored !== 'light'; // default: dark
 
   function setTheme(isDark) {
     dark = isDark;
-    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    if (isDark) {
+      document.documentElement.classList.remove('light-mode');
+    } else {
+      document.documentElement.classList.add('light-mode');
+    }
     localStorage.setItem('toolsathi-theme', isDark ? 'dark' : 'light');
 
     if (btn) {
@@ -41,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   }
 
-  // ── Scroll Reveal Animations ──────────────────────────────
+  // --- Scroll Reveal Animations ------------------------------
   const revealEls = document.querySelectorAll('.reveal-hidden');
   if (revealEls.length) {
     const observer = new IntersectionObserver((entries) => {
@@ -106,22 +110,51 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Login Functionality
-  const loginForm = document.getElementById('login-form');
-  if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const user = document.getElementById('username').value;
-      const pass = document.getElementById('password').value;
-      const errorMsg = document.getElementById('login-error');
-
-      if (user === 'admin' && pass === '1234') {
-        // Redirect to admin dashboard
-        window.location.href = 'admin.html';
+  // --- Global Tools Management ------------------------------
+  function syncToolVisibility() {
+    const toolStates = JSON.parse(localStorage.getItem('ts-tools') || '{}');
+    const toolElements = document.querySelectorAll('[data-tool]');
+    
+    toolElements.forEach(el => {
+      const toolId = el.getAttribute('data-tool');
+      if (toolStates[toolId] === false) {
+        el.style.display = 'none';
       } else {
-        errorMsg.style.display = 'block';
-        errorMsg.textContent = 'Invalid username or password';
+        // Only set to original if it was previously hidden by this script
+        // Most elements use default display (block, flex, etc.)
+        if (el.style.display === 'none') {
+          el.style.display = ''; 
+        }
       }
     });
+  }
+
+  // Initial sync
+  syncToolVisibility();
+  
+  // Also sync on storage changes (in case admin tab is open)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'ts-tools') syncToolVisibility();
+  });
+});
+
+// --- Cookie Consent Popup --------------------------------
+function acceptCookies() {
+  localStorage.setItem("cookieConsent", "accepted");
+  const el = document.getElementById("cookie-popup");
+  if(el) el.style.display = "none";
+}
+
+function rejectCookies() {
+  const el = document.getElementById("cookie-popup");
+  if(el) el.style.display = "none";
+}
+
+// Check popup state on load
+document.addEventListener('DOMContentLoaded', () => {
+  const popup = document.getElementById("cookie-popup");
+  // Only show if not previously accepted and the popup exists on page
+  if (popup && localStorage.getItem("cookieConsent") !== "accepted") {
+    popup.style.display = "block";
   }
 });

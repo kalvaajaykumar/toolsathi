@@ -30,8 +30,8 @@
   --font-display: 'Fraunces', serif;
 }
 
-/* Explicit dark mode selector (set by JS toggle) */
-[data-theme="dark"] {
+/* Explicit dark mode fallback */
+body.dark-mode {
   --bg-color: #080B14;
   --bg-primary: #080B14;
   --bg-secondary: #0D1120;
@@ -58,31 +58,101 @@
 }
 
 /* Light mode override — applied via JS when user switches */
-[data-theme="light"] {
-  --bg-color: #F8FAFC;
-  --bg-primary: #F8FAFC;
-  --bg-secondary: rgba(241,245,249,0.9);
-  --bg-card: rgba(255,255,255,0.7);
-  --text-color: #0F172A;
-  --text-primary: #0F172A;
-  --text-secondary: #334155;
-  --text-muted: #94A3B8;
-  --card-bg: rgba(255, 255, 255, 0.8);
-  --card-border: rgba(0, 0, 0, 0.08);
-  --border-subtle: rgba(0,0,0,0.08);
-  --primary: #7C3AED;
-  --primary-hover: #6D28D9;
-  --accent-violet: #7C3AED;
-  --accent-violet-light: #8B5CF6;
+.light-mode {
+  /* Rich warm ivory base — feels premium, not flat white */
+  --bg-color: #FAF7FF;
+  --bg-primary: #FAF7FF;
+  --bg-secondary: #F3EEFF;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: rgba(255, 255, 255, 0.98);
+
+  /* Deep rich text — high contrast, readable */
+  --text-color: #1A0A3C;
+  --text-primary: #1A0A3C;
+  --text-secondary: #4C3A7A;
+  --text-muted: #8B7FB5;
+
+  /* Card & border styling */
+  --card-bg: rgba(255, 255, 255, 0.88);
+  --card-border: rgba(124, 58, 237, 0.15);
+  --border-subtle: rgba(124, 58, 237, 0.12);
+  --border-glow: rgba(124, 58, 237, 0.35);
+
+  /* Vibrant violet & gold accents */
+  --primary: #6D28D9;
+  --primary-hover: #5B21B6;
+  --accent-violet: #6D28D9;
+  --accent-violet-light: #7C3AED;
   --accent-gold: #D97706;
+  --accent-gold-light: #F59E0B;
   --accent-emerald: #059669;
-  --secondary: #F1F5F9;
-  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-  --nav-bg: rgba(248, 250, 252, 0.85);
-  --input-bg: rgba(0, 0, 0, 0.04);
-  --input-border: rgba(0, 0, 0, 0.1);
-  --noise-opacity: 0.15;
+
+  /* Glow effects */
+  --glow-violet: rgba(109, 40, 217, 0.12);
+  --glow-gold: rgba(217, 119, 6, 0.1);
+  --glass-shadow: 0 8px 40px rgba(109, 40, 217, 0.12);
+
+  /* Nav & inputs */
+  --nav-bg: rgba(250, 247, 255, 0.92);
+  --input-bg: rgba(109, 40, 217, 0.04);
+  --input-border: rgba(109, 40, 217, 0.18);
+  --noise-opacity: 0.12;
 }
+
+/* Light mode enhanced glass card */
+.light-mode .glass-card {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(124, 58, 237, 0.14);
+  box-shadow: 0 4px 24px rgba(109, 40, 217, 0.08), 0 1px 0 rgba(255,255,255,0.9) inset;
+}
+.light-mode .glass-card:hover {
+  background: rgba(255, 255, 255, 0.96);
+  border-color: rgba(124, 58, 237, 0.3);
+  box-shadow: 0 12px 40px rgba(109, 40, 217, 0.16);
+}
+
+/* Light mode ambient orbs — vibrant violet + gold */
+.light-mode .ambient-orb:first-child {
+  background: radial-gradient(circle, rgba(109, 40, 217, 0.18) 0%, transparent 70%) !important;
+}
+
+/* Light mode input */
+.light-mode .tool-input {
+  background: rgba(109, 40, 217, 0.04);
+  border-color: rgba(109, 40, 217, 0.18);
+  color: #1A0A3C;
+}
+.light-mode .tool-input:focus {
+  background: rgba(109, 40, 217, 0.07);
+  border-color: #6D28D9;
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.14);
+}
+
+/* Light mode badge tweaks */
+.light-mode .badge-violet { background: rgba(109,40,217,0.1); border-color: rgba(109,40,217,0.25); color: #5B21B6; }
+.light-mode .badge-gold { background: rgba(217,119,6,0.1); border-color: rgba(217,119,6,0.22); color: #B45309; }
+.light-mode .badge-green { background: rgba(5,150,105,0.1); border-color: rgba(5,150,105,0.22); color: #047857; }
+
+/* Light mode nav item hover */
+.light-mode .nav-item:hover { background: rgba(109,40,217,0.08); color: #5B21B6; }
+.light-mode .nav-item-tool:hover { background: rgba(109,40,217,0.07); color: #5B21B6; }
+
+/* Light mode button secondary */
+.light-mode .btn-secondary {
+  background: rgba(109, 40, 217, 0.07);
+  border-color: rgba(109, 40, 217, 0.2);
+  color: #4C3A7A;
+}
+.light-mode .btn-secondary:hover {
+  background: rgba(109, 40, 217, 0.13);
+  border-color: rgba(109, 40, 217, 0.4);
+  color: #1A0A3C;
+}
+
+/* Light mode scrollbar */
+.light-mode ::-webkit-scrollbar-track { background: #F3EEFF; }
+.light-mode ::-webkit-scrollbar-thumb { background: rgba(109, 40, 217, 0.25); }
+.light-mode ::-webkit-scrollbar-thumb:hover { background: rgba(109, 40, 217, 0.45); }
 
 * {
   margin: 0;
@@ -92,18 +162,15 @@
 
 html {
   scroll-behavior: smooth;
-}
-
-html {
-  scroll-behavior: smooth;
   background-color: var(--bg-color);
-  transition: background-color 0.3s ease;
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -137,9 +204,9 @@ ul {
   list-style: none;
 }
 
-/* ═══════════════════════════════════════════
-   DESIGN SYSTEM — Glass, Gradients, Badges
-═══════════════════════════════════════════ */
+/* ===========================================
+   DESIGN SYSTEM - Glass, Gradients, Badges
+=========================================== */
 
 /* Glass card */
 .glass-card {
@@ -461,24 +528,6 @@ main {
   text-align: center;
 }
 
-.btn-primary {
-  background: var(--primary);
-  color: #fff;
-}
-
-.btn-primary:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background: var(--secondary);
-  color: var(--text-color);
-}
-
-.btn-secondary:hover {
-  filter: brightness(0.9);
-}
 
 /* Grid Layouts */
 .grid {
@@ -766,4 +815,86 @@ footer {
   .admin-main {
     padding: 2rem 5%;
   }
+}
+
+/* Cookie Popup */
+.cookie-popup {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 2.5rem);
+  max-width: 520px;
+  background: rgba(13, 17, 32, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: #F1F5F9;
+  padding: 1.25rem 1.5rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  z-index: 9999;
+  display: none;
+  animation: cookieSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes cookieSlideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(30px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.cookie-popup p {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #CBD5E1;
+  margin: 0 0 1rem 0;
+}
+
+.cookie-popup div {
+  display: flex;
+  gap: 0.625rem;
+}
+
+.cookie-popup button {
+  flex: 1;
+  padding: 0.6rem 1.25rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: all 0.2s;
+}
+
+.cookie-popup button:first-child {
+  background: linear-gradient(135deg, #7C3AED, #6D28D9);
+  color: white;
+  box-shadow: 0 3px 12px rgba(124,58,237,0.3);
+}
+.cookie-popup button:first-child:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(124,58,237,0.4);
+}
+
+.cookie-popup button:last-child {
+  background: rgba(255,255,255,0.06);
+  color: #94A3B8;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.cookie-popup button:last-child:hover {
+  background: rgba(255,255,255,0.1);
+  color: #F1F5F9;
+}
+
+.light-mode .cookie-popup {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0,0,0,0.1);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+}
+.light-mode .cookie-popup p { color: #334155; }
+.light-mode .cookie-popup button:last-child {
+  background: rgba(0,0,0,0.05);
+  color: #64748B;
+  border-color: rgba(0,0,0,0.1);
 }

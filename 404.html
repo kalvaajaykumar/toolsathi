@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>if(localStorage.getItem("toolsathi-theme")==="light"){document.documentElement.classList.add("light-mode");}</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 Page Not Found — Toolsathi</title>
+  <title>404 Page Not Found  Toolsathi</title>
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=4">
   <style>
     .not-found-container {
       min-height: 100vh;
@@ -13,102 +14,52 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
+      padding: 1.5rem;
       background: var(--bg-primary);
     }
-    .not-found-content {
-      text-align: center;
-      max-width: 28rem;
-    }
     .error-code {
-      font-size: 8rem;
+      font-size: clamp(6rem, 15vw, 10rem);
       line-height: 1;
       font-weight: 700;
-      color: var(--primary);
-      opacity: 0.2;
+      color: var(--accent-violet);
+      opacity: 0.15;
       margin-bottom: 1.5rem;
       font-family: var(--font-display);
-    }
-    .error-title {
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin-bottom: 0.5rem;
-      font-family: var(--font-display);
-    }
-    .error-desc {
-      color: var(--text-muted);
-      margin-bottom: 2rem;
-    }
-    .button-group {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      justify-content: center;
-    }
-    @media (min-width: 640px) {
-      .button-group {
-        flex-direction: row;
-      }
-    }
-    .btn-back {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      background: var(--primary);
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem;
-      font-weight: 500;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-    }
-    .btn-back:hover {
-      opacity: 0.9;
-    }
-    .btn-home {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      background: transparent;
-      color: var(--text-primary);
-      border: 1px solid var(--border-subtle);
-      padding: 0.75rem 1.5rem;
-      border-radius: 0.5rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-    }
-    .btn-home:hover {
-      background: var(--bg-card);
+      text-shadow: 0 0 40px rgba(124,58,237,0.3);
     }
   </style>
 </head>
 <body style="margin: 0; padding: 0;">
 
   <div class="not-found-container relative z-10 w-full overflow-hidden">
-    <!-- Ambient -->
-    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <!-- Ambient Orbs -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
       <div class="ambient-orb orb-animate" style="position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%); top: 10%; right: 10%;"></div>
+      <div class="ambient-orb orb-animate-reverse" style="position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%); bottom: 10%; left: 10%;"></div>
     </div>
 
-    <div class="not-found-content relative z-10">
-      <h1 class="error-code">404</h1>
-      <h2 class="error-title">Page Not Found</h2>
-      <p class="error-desc">The page you're looking for doesn't exist. Let's get you back!</p>
+    <!-- Main Content -->
+    <div style="text-align: center; max-width: 28rem; position: relative; z-index: 10;">
+      <!-- Giant 404 text -->
+      <div style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
+        <h1 class="error-code">404</h1>
+      </div>
+
+      <h2 class="font-display font-semibold" style="font-size: 1.5rem; color: var(--text-primary); margin-bottom: 0.5rem;">
+        Page Not Found
+      </h2>
+      <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 1rem; line-height: 1.6;">
+        The page you're looking for doesn't exist. Let's get you back!
+      </p>
       
-      <div class="button-group">
-        <button onclick="window.history.back()" class="btn-back">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <!-- Action Buttons -->
+      <div style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+        <button onclick="window.history.back()" class="btn-primary" style="display: inline-flex; align-items: center; gap: 0.5rem; border: none; cursor: pointer; font-size: 0.9375rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
           Go Back
         </button>
-        <a href="index.html" class="btn-home">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <a href="index.html" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none; font-size: 0.9375rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           Back to Home
         </a>
       </div>
@@ -116,12 +67,16 @@
   </div>
 
   <div style="position: absolute; top: 1rem; right: 1rem; z-index: 50;">
-    <button class="theme-toggle" id="theme-toggle" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">🌙</button>
+    <button class="theme-toggle" id="theme-toggle" style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">??</button>
   </div>
 
-  <script src="js/script.js"></script>
+  <script src="js/script.js?v=4"></script>
   
   <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Ftoolsathi4698back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.18"></script>
   <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2"></script>
 </body>
 </html>
+
+
+
+

@@ -1,24 +1,33 @@
-import os
-import re
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>if(localStorage.getItem("toolsathi-theme")==="light"){document.documentElement.classList.add("light-mode");}</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookie Policy | Toolsathi</title>
+  <meta name="description" content="Cookie Policy for Toolsathi. Learn what cookies are and how we use them.">
+  <link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
 
-HEADER_TEMPLATE_ROOT = """  <!-- Navigation -->
+                <!-- Navigation -->
   <header class="glass-nav z-50" style="transition: all 0.3s; z-index: 50;">
     <div style="max-width: 72rem; margin: 0 auto; padding: 0 1rem; height: 4rem; display: flex; align-items: center; justify-content: space-between;">
-      <a href="[[PREFIX]]index.html" class="logo flex items-center cursor-pointer hover:opacity-80 transition-opacity group" style="text-decoration: none; gap: 0.5rem;" >
-        <img src="[[PREFIX]]assets/images/app_logo.png" alt="Toolsathi Logo" width="32" height="32" class="flex-shrink-0" style="border-radius: 0.25rem;" loading="lazy" onerror="this.onerror=null; this.outerHTML='<span style=\\'display:flex; width:32px; height:32px; align-items:center; justify-content:center; background:var(--accent-violet); color:white; border-radius:0.25rem; font-weight:bold;\\'>T</span>'" />
+      <a href="index.html" class="logo flex items-center cursor-pointer hover:opacity-80 transition-opacity group" style="text-decoration: none; gap: 0.5rem;" >
+        <img src="assets/images/app_logo.png" alt="Toolsathi Logo" width="32" height="32" class="flex-shrink-0" style="border-radius: 0.25rem;" loading="lazy" onerror="this.onerror=null; this.outerHTML='<span style=\'display:flex; width:32px; height:32px; align-items:center; justify-content:center; background:var(--accent-violet); color:white; border-radius:0.25rem; font-weight:bold;\'>T</span>'" />
         <span class="font-display font-semibold text-lg tracking-tight" style="color: var(--text-primary);">Toolsathi</span>
       </a>
 
       <!-- Desktop Nav -->
       <nav class="nav-links" id="nav-links" style="align-items: center; gap: 0.25rem;">
-        <a href="[[PREFIX]]index.html" class="nav-item" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none;">Home</a>
-        <a href="[[PREFIX]]ai-tools.html" class="nav-item" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none;">AI Tools</a>
-        <a href="[[PREFIX]]blog.html" class="nav-item" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none;">Blog</a>
-        <a href="[[PREFIX]]about.html" class="nav-item" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none;">About</a>
-        <a href="[[PREFIX]]index.html#feedback" class="nav-item" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none;">Feedback</a>
+        <a href="index.html" class="nav-item" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none;">Home</a>
+        <a href="ai-tools.html" class="nav-item" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none;">AI Tools</a>
+        <a href="blog.html" class="nav-item" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none;">Blog</a>
+        <a href="about.html" class="nav-item" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none;">About</a>
+        <a href="index.html#feedback" class="nav-item" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none;">Feedback</a>
         
         <div class="dropdown-wrapper" style="position: relative;">
-          <a href="[[PREFIX]]index.html#tools" class="nav-item flex-center gap-1 dropdown-toggle" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none; cursor: pointer;">
+          <a href="index.html#tools" class="nav-item flex-center gap-1 dropdown-toggle" style="padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; color: var(--text-secondary); text-decoration: none; cursor: pointer;">
             Tools
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6" /></svg>
           </a>
@@ -42,18 +51,18 @@ HEADER_TEMPLATE_ROOT = """  <!-- Navigation -->
 
     <!-- Mobile menu -->
     <div class="mobile-menu" id="mobile-menu" style="position: absolute; top: 100%; left: 0; right: 0; background: rgba(8,11,20,0.97); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-subtle); display: none; flex-direction: column; padding: 1rem; gap: 0.25rem;">
-      <a href="[[PREFIX]]index.html" class="nav-item" style="padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none;">Home</a>
-      <a href="[[PREFIX]]ai-tools.html" class="nav-item" style="padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none;">AI Tools</a>
-      <a href="[[PREFIX]]blog.html" class="nav-item" style="padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none;">Blog</a>
-      <a href="[[PREFIX]]about.html" class="nav-item" style="padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none;">About</a>
-      <a href="[[PREFIX]]index.html#feedback" class="nav-item" style="padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none;">Feedback</a>
+      <a href="index.html" class="nav-item" style="padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none;">Home</a>
+      <a href="ai-tools.html" class="nav-item" style="padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none;">AI Tools</a>
+      <a href="blog.html" class="nav-item" style="padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none;">Blog</a>
+      <a href="about.html" class="nav-item" style="padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none;">About</a>
+      <a href="index.html#feedback" class="nav-item" style="padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none;">Feedback</a>
       <div style="padding: 0.5rem 1rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); margin-top: 0.5rem;">Tools</div>
       <div id="mobile-tools-dropdown" style="display: flex; flex-direction: column; gap: 0.25rem;"></div>
     </div>
     <script>
       async function loadNavTools() {
         try {
-          const res = await fetch('[[PREFIX]]data/tools.json?v=' + Date.now());
+          const res = await fetch('data/tools.json?v=' + Date.now());
           const jsonTools = await res.json();
           const customTools = JSON.parse(localStorage.getItem('ts-custom-tools') || '[]');
           const hiddenIds = JSON.parse(localStorage.getItem('ts-hidden-tools') || '[]');
@@ -71,11 +80,11 @@ HEADER_TEMPLATE_ROOT = """  <!-- Navigation -->
           
           visibleTools.forEach(tool => {
             // Handle prefix properly based on whether tool is custom/dynamic vs static
-            let href = tool.isStatic ? '[[PREFIX]]' + tool.path : '[[PREFIX]]dynamic-tool.html?id=' + tool.id;
+            let href = tool.isStatic ? '' + tool.path : 'dynamic-tool.html?id=' + tool.id;
             
             // Adjust if path already contains relative segments (some static tools might just define path="tools/xxx")
             if (tool.isStatic && tool.path.startsWith('tools/')) {
-                 href = '[[PREFIX]]' + tool.path;
+                 href = '' + tool.path;
             }
 
             if(dDesk) {
@@ -103,10 +112,72 @@ HEADER_TEMPLATE_ROOT = """  <!-- Navigation -->
         if (e.key === 'ts-custom-tools' || e.key === 'ts-tools') loadNavTools();
       });
     </script>
-  </header>"""
+  </header>
 
+  <main class="main-content relative z-10" style="padding-top: 6rem; padding-bottom: 4rem;">
+    <div style="max-width: 48rem; margin: 0 auto; padding: 0 1rem;">
+      
+      <div class="card p-6" style="margin-top: 2rem; color: var(--text-secondary); line-height: 1.7;">
+        <h1 class="font-display font-bold text-3xl mb-4" style="color: var(--text-primary);">Cookie Policy</h1>
+<p>Last updated: 2026</p>
 
-FOOTER_TEMPLATE_ROOT = """  <!-- Footer -->
+<h2 class="font-semibold text-xl mb-3 mt-6" style="color: var(--text-primary);">1. What are Cookies?</h2>
+<p class="mb-4">
+Cookies are small text files stored on your device when you visit a website. 
+They help websites function properly and provide information about how users interact with the site.
+</p>
+
+<p class="mb-4">
+Cookies set by the website owner are called "first-party cookies", while cookies set by third-party services are known as "third-party cookies".
+</p>
+
+<h2 class="font-semibold text-xl mb-3 mt-6" style="color: var(--text-primary);">2. How We Use Cookies</h2>
+<p class="mb-4">Toolsathi uses cookies and similar technologies for the following purposes:</p>
+
+<ul class="mb-4 list-disc pl-5">
+<li class="mb-2"><strong>Preferences:</strong> We use your browser’s localStorage to remember your selected theme (dark or light mode).</li>
+<li class="mb-2"><strong>Analytics:</strong> We use analytics tools to understand how users interact with our website and improve performance and user experience.</li>
+<li class="mb-2"><strong>Advertising:</strong> We display advertisements to keep our tools free to use.</li>
+</ul>
+
+<h2 class="font-semibold text-xl mb-3 mt-10" style="color: var(--text-primary);">3. Third-Party Cookies (Google AdSense)</h2>
+<p class="mb-4">
+We use Google AdSense to display ads. Third-party vendors, including Google, may use cookies to serve ads based on your previous visits to this or other websites.
+</p>
+
+<p class="mb-4">
+Google uses advertising cookies to show relevant ads. You can opt out of personalized advertising by visiting Google Ads Settings.
+</p>
+
+<h2 class="font-semibold text-xl mb-3 mt-6" style="color: var(--text-primary);">4. Managing Cookies</h2>
+<p class="mb-4">
+You can control and manage cookies through your browser settings. Most browsers allow you to block or delete cookies. 
+However, disabling cookies may affect the functionality of some parts of the website.
+</p>
+
+<h2 class="font-semibold text-xl mb-3 mt-6" style="color: var(--text-primary);">5. User Consent</h2>
+<p class="mb-4">
+By continuing to use Toolsathi, you agree to the use of cookies as described in this Cookie Policy.
+</p>
+
+<p class="mb-4">
+This Cookie Policy is provided for general information and may be updated at any time.
+</p>
+
+<h2 class="font-semibold text-xl mb-3 mt-6" style="color: var(--text-primary);">6. Contact Us</h2>
+<p class="mb-4">
+If you have any questions about this Cookie Policy, please contact us at:
+</p>
+
+<p class="mb-4"><strong>Email:</strong> <a href="mailto:toolsathi.help@zohomail.in" style="color: var(--accent-violet-light);">toolsathi.help@zohomail.in</a></p>
+
+<p class="mb-4 text-muted" style="font-size: 0.85rem;">This Cookie Policy may be updated from time to time.</p>
+      </div>
+
+    </div>
+  </main>
+
+                <!-- Footer -->
   <footer class="relative z-10" style="position: relative; z-index: 10; border-top: 1px solid var(--border-subtle);">
     <div style="max-width: 72rem; margin: 0 auto; padding: 2.5rem 1rem;">
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
@@ -114,7 +185,7 @@ FOOTER_TEMPLATE_ROOT = """  <!-- Footer -->
         <!-- Brand -->
         <div>
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-            <img src="[[PREFIX]]assets/images/app_logo.png" alt="Toolsathi Logo" width="24" height="24" class="flex-shrink-0" style="border-radius: 0.25rem;" loading="lazy" onerror="this.onerror=null; this.outerHTML='<span style=\\'display:flex; width:24px; height:24px; align-items:center; justify-content:center; background:var(--accent-violet); color:white; border-radius:0.25rem; font-weight:bold; font-size:12px;\\'>T</span>'" />
+            <img src="assets/images/app_logo.png" alt="Toolsathi Logo" width="24" height="24" class="flex-shrink-0" style="border-radius: 0.25rem;" loading="lazy" onerror="this.onerror=null; this.outerHTML='<span style=\'display:flex; width:24px; height:24px; align-items:center; justify-content:center; background:var(--accent-violet); color:white; border-radius:0.25rem; font-weight:bold; font-size:12px;\'>T</span>'" />
             <span class="font-display font-semibold text-sm" style="font-size: 0.875rem; color: var(--text-primary);">Toolsathi</span>
           </div>
           <p class="text-xs leading-relaxed" style="font-size: 0.75rem; line-height: 1.625; color: var(--text-muted);">
@@ -126,12 +197,12 @@ FOOTER_TEMPLATE_ROOT = """  <!-- Footer -->
         <div>
           <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; color: var(--text-muted);">Pages</p>
           <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-            <a href="[[PREFIX]]index.html" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Home</a>
-            <a href="[[PREFIX]]ai-tools.html" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">AI Tools</a>
-            <a href="[[PREFIX]]blog.html" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Blog</a>
-            <a href="[[PREFIX]]about.html" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">About</a>
-            <a href="[[PREFIX]]index.html#feedback" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Feedback</a>
-            <a href="[[PREFIX]]login.html" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Admin</a>
+            <a href="index.html" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Home</a>
+            <a href="ai-tools.html" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">AI Tools</a>
+            <a href="blog.html" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Blog</a>
+            <a href="about.html" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">About</a>
+            <a href="index.html#feedback" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Feedback</a>
+            <a href="login.html" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Admin</a>
           </div>
         </div>
 
@@ -139,12 +210,12 @@ FOOTER_TEMPLATE_ROOT = """  <!-- Footer -->
         <div>
           <p class="text-xs font-semibold uppercase tracking-widest mb-3" style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; color: var(--text-muted);">Tools</p>
           <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-            <a href="[[PREFIX]]tools/age-calculator.html" data-tool="age" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Age Calculator</a>
-            <a href="[[PREFIX]]tools/cgpa-calculator.html" data-tool="cgpa" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">CGPA Calculator</a>
-            <a href="[[PREFIX]]tools/emi-calculator.html" data-tool="emi" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">EMI Calculator</a>
-            <a href="[[PREFIX]]tools/percentage-calculator.html" data-tool="pct" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Percentage Calc</a>
-            <a href="[[PREFIX]]tools/bmi-calculator.html" data-tool="bmi" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">BMI Calculator</a>
-            <a href="[[PREFIX]]tools/discount-calculator.html" data-tool="disc" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Discount Calc</a>
+            <a href="tools/age-calculator.html" data-tool="age" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Age Calculator</a>
+            <a href="tools/cgpa-calculator.html" data-tool="cgpa" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">CGPA Calculator</a>
+            <a href="tools/emi-calculator.html" data-tool="emi" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">EMI Calculator</a>
+            <a href="tools/percentage-calculator.html" data-tool="pct" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Percentage Calc</a>
+            <a href="tools/bmi-calculator.html" data-tool="bmi" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">BMI Calculator</a>
+            <a href="tools/discount-calculator.html" data-tool="disc" class="nav-item" style="display: block; font-size: 0.875rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Discount Calc</a>
           </div>
         </div>
 
@@ -216,15 +287,15 @@ FOOTER_TEMPLATE_ROOT = """  <!-- Footer -->
           <p class="text-xs mt-1" style="font-size: 0.7rem; color: var(--text-muted); margin: 0.25rem 0 0 0;">This site uses cookies for analytics.</p>
         </div>
         <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-          <a href="[[PREFIX]]privacy-policy.html" class="text-xs transition-colors" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Privacy</a>
+          <a href="privacy-policy.html" class="text-xs transition-colors" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Privacy</a>
           <span style="color: var(--text-muted); font-size: 0.75rem;">|</span>
-          <a href="[[PREFIX]]terms.html" class="text-xs transition-colors" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Terms</a>
+          <a href="terms.html" class="text-xs transition-colors" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Terms</a>
           <span style="color: var(--text-muted); font-size: 0.75rem;">|</span>
-          <a href="[[PREFIX]]cookies.html" class="text-xs transition-colors" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Cookies</a>
+          <a href="cookies.html" class="text-xs transition-colors" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Cookies</a>
           <span style="color: var(--text-muted); font-size: 0.75rem;">|</span>
-          <a href="[[PREFIX]]login.html" class="text-xs transition-colors" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Admin</a>
+          <a href="login.html" class="text-xs transition-colors" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">Admin</a>
           <span style="color: var(--text-muted); font-size: 0.75rem;">|</span>
-          <a href="[[PREFIX]]about.html" class="text-xs transition-colors" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">About</a>
+          <a href="about.html" class="text-xs transition-colors" style="font-size: 0.75rem; color: var(--text-muted); text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='var(--text-muted)'">About</a>
         </div>
       </div>
     </div>
@@ -237,50 +308,8 @@ FOOTER_TEMPLATE_ROOT = """  <!-- Footer -->
         <button onclick="rejectCookies()">Reject</button>
       </div>
     </div>
-  </footer>"""
+  </footer>
 
-def process_file(filepath, is_tool=False):
-    prefix = "../" if is_tool else ""
-    
-    with open(filepath, 'r', encoding='utf-8', errors='ignore') as f:
-        content = f.read()
-
-    # Admin UI is different enough that replacing its header might break its sidebar structure entirely.
-    if "admin.html" in filepath:
-        return
-
-    # Replace header block
-    header_pattern = re.compile(r'<!-- Navigation -->\s*<header.*?</header>', re.DOTALL)
-    header_replacement = HEADER_TEMPLATE_ROOT.replace('[[PREFIX]]', prefix)
-    
-    if header_pattern.search(content):
-        content = header_pattern.sub(header_replacement, content)
-        
-    # Replace footer block
-    footer_pattern = re.compile(r'<!-- Footer -->\s*<footer.*?</footer\s*>', re.DOTALL)
-    # also handle old structure which might not have <!-- Footer -->
-    old_footer_pattern = re.compile(r'<footer class="site-footer".*?</footer\s*>', re.DOTALL)
-    
-    footer_replacement = FOOTER_TEMPLATE_ROOT.replace('[[PREFIX]]', prefix)
-    
-    if footer_pattern.search(content):
-        content = footer_pattern.sub(footer_replacement, content)
-    elif old_footer_pattern.search(content):
-        content = old_footer_pattern.sub(footer_replacement, content)
-        
-    with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(content)
-
-base_dir = r"d:\Toolsathi"
-
-import glob
-
-for filename in glob.glob(os.path.join(base_dir, "*.html")):
-    process_file(filename, False)
-
-tool_dir = os.path.join(base_dir, "tools")
-for filename in glob.glob(os.path.join(tool_dir, "*.html")):
-    process_file(filename, True)
-
-print("Updated HTML layout blocks natively.")
-
+  <script src="js/script.js?v=4"></script>
+</body>
+</html>
