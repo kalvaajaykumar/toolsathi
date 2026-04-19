@@ -77,10 +77,14 @@
     }
     .brand-icon {
       width: 36px; height: 36px; border-radius: 10px;
-      background: linear-gradient(135deg, var(--violet), var(--gold));
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Fraunces', serif; font-weight: 700; font-size: 1rem; color: #fff;
       flex-shrink: 0;
+      overflow: hidden;
+    }
+    .brand-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
     .brand-text p:first-child { font-family: 'Fraunces', serif; font-weight: 700; font-size: 0.9rem; color: var(--t1); line-height: 1.2; }
     .brand-text p:last-child  { font-size: 0.68rem; color: var(--t3); }
@@ -272,7 +276,9 @@
 <!-- ════════════════ SIDEBAR ════════════════ -->
 <aside class="sidebar" id="sidebar">
   <div class="brand">
-    <div class="brand-icon">T</div>
+    <div class="brand-icon">
+      <img src="/assets/images/app_logo.png" alt="Toolsathi Logo">
+    </div>
     <div class="brand-text">
       <p>Toolsathi</p>
       <p>Admin Panel</p>
@@ -1510,3 +1516,4 @@ function dangerClearFeedback() {
 </script>
 </body>
 </html>
+
